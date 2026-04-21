@@ -1,0 +1,30 @@
+{
+  "name": "Zone 2 For You",
+  "short_name": "Zone 2",
+  "description": "Free Zone 2 heart rate calculator comparing Karvonen, Maffetone, percent of max HR, and 220 minus age.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#161620",
+  "theme_color": "#161620",
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

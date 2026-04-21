@@ -15,7 +15,11 @@
   <link rel="canonical" href="https://zone2foryou.com/">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#161620">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zone 2 For You">
   <meta name="author" content="Hatch and Scale LLC">
+  <link rel="manifest" href="manifest.webmanifest">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -24,20 +28,23 @@
   <meta property="og:url" content="https://zone2foryou.com/">
   <meta property="og:title" content="Zone 2 For You: Your Zone 2 heart rate range, clear and ready to use">
   <meta property="og:description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, and 220 minus age. Get one clear range without reconciling conflicting formulas.">
-  <meta property="og:image" content="https://zone2foryou.com/images/z24u-logo_dark.png">
+  <meta property="og:image" content="https://zone2foryou.com/images/og-image-1200x630.png">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="Zone 2 For You logo">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Zone 2 For You preview image">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Zone 2 For You: Your Zone 2 heart rate range">
   <meta name="twitter:description" content="Free Zone 2 heart rate calculator. Compare top formulas and get a clear bpm range from your inputs.">
-  <meta name="twitter:image" content="https://zone2foryou.com/images/z24u-logo_dark.png">
-  <meta name="twitter:image:alt" content="Zone 2 For You logo">
+  <meta name="twitter:image" content="https://zone2foryou.com/images/og-image-1200x630.png">
+  <meta name="twitter:image:alt" content="Zone 2 For You preview image">
 
-  <!-- Favicons (paths relative to this HTML file; use same files on the live host) -->
-  <link rel="icon" href="images/z24u-logo_dark.png" type="image/png">
-  <link rel="apple-touch-icon" href="images/z24u-logo_dark.png">
+  <!-- Favicons / app icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-95GMLXCSTF"></script>
@@ -1651,6 +1658,14 @@ function setHasStrap(hasOne) {
   document.getElementById('aff-note').style.display = hasOne ? 'none' : '';
   trackEvent('strap_toggle', { has_chest_strap: hasOne });
 
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {
+      // Registration failures are non-blocking for the core page experience.
+    });
+  });
 }
 
 </script>
