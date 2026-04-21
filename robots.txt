@@ -1,0 +1,5 @@
+# Zone 2 For You — allow crawlers; point to sitemap
+User-agent: *
+Allow: /
+
+Sitemap: https://zone2foryou.com/sitemap.xml
