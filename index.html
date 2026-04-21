@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zone 2 For You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..900&display=swap" rel="stylesheet">
+  <style>
+    /* ═══ Tokens: Brand/briefs/z24u-color-system + z24u-typography ═══ */
+    :root {
+      --z1-fill: #7DCCDA;
+      --z2-fill: #00B4D8;
+      --z3-fill: #F9C623;
+      --z4-fill: #F97316;
+      --z5-fill: #E91E8C;
+      --zone-1: var(--z1-fill);
+      --zone-2: var(--z2-fill);
+      --zone-3: var(--z3-fill);
+      --zone-4: var(--z4-fill);
+      --zone-5: var(--z5-fill);
+      --text-on-fill: #1C1814;
+
+      --bg: #161620;
+      --surface: #20202E;
+      --surface-raised: #2A2A3A;
+      --surface-inset: #12121C;
+      --border: #38384A;
+      --border-subtle: #28283A;
+      --text-primary: #F0EBE2;
+      --text-secondary: #9A95A0;
+      --text-tertiary: #5A556A;
+
+      --accent-primary: #00B4D8;
+      --accent-primary-hover: #0096B8;
+      --accent-primary-text: #00B4D8;
+      --accent-primary-light: #B8EEFF;
+      --accent-tint: rgba(0, 180, 216, 0.11);
+      --accent-border: rgba(0, 180, 216, 0.32);
+      --accent-glow: rgba(0, 180, 216, 0.22);
+      --accent-consensus-bg: rgba(0, 180, 216, 0.055);
+
+      --text-display: 40px;
+      --text-heading-1: 28px;
+      --text-heading-2: 22px;
+      --text-heading-3: 18px;
+      --text-body: 16px;
+      --text-label: 14px;
+      --text-small: 12px;
+      --text-micro: 11px;
+
+      --nav-height: 69px;
+      --zstrip-h: 4px;
+      --steps-bar-height: 68px;
+      --site-header-h: calc(var(--nav-height) + var(--zstrip-h) + var(--steps-bar-height));
+      --chart-meta-w: 148px;
+
+      /* Legacy aliases (existing rules) */
+      --t1: var(--text-primary);
+      --t2: var(--text-secondary);
+      --t3: var(--text-tertiary);
+      --ac: var(--accent-primary);
+      --ac-h: var(--accent-primary-hover);
+      --surface-r: var(--surface-raised);
+      --surface-i: var(--surface-inset);
+      --bs: var(--border-subtle);
+      --bm: var(--border);
+      --ac-d: var(--accent-tint);
+      --ac-b: var(--accent-border);
+      --ac-g: var(--accent-glow);
+      --ac-col: var(--accent-consensus-bg);
+      --ac-cb: var(--accent-border);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{
+      scroll-behavior:smooth;
+      scroll-padding-top:calc(var(--site-header-h) + 12px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    body{
+      font-family:'Inter',system-ui,sans-serif;
+      font-size:var(--text-body);
+      line-height:1.5;
+      background:var(--bg);
+      color:var(--text-primary);
+      -webkit-font-smoothing:antialiased;
+    }
+    :focus-visible{
+      outline:2px solid var(--accent-primary);
+      outline-offset:2px;
+    }
+    a:focus-visible, button:focus-visible{outline-offset:3px}
+
+    /* ═══ Sticky site header (nav + zone strip + steps) ═══ */
+    .site-header{
+      position:sticky;top:0;z-index:100;
+      background:var(--bg);
+    }
+    /* ═══ Zone strip ═══ */
+    .zstrip{display:flex;height:var(--zstrip-h);flex-shrink:0}
+    .zstrip div{flex:1}
+
+    /* ═══ Nav ═══ */
+    nav{
+      display:flex;align-items:center;justify-content:center;
+      min-height:var(--nav-height);
+      padding:14px 24px;border-bottom:1px solid var(--border-subtle);
+      background:rgba(22,22,32,.93);
+      backdrop-filter:blur(12px);
+    }
+    .nav-logo{height:40px;width:auto;display:block}
+
+    /* ═══ Steps bar ═══ */
+    .steps-bar{
+      border-bottom:1px solid var(--border-subtle);
+      background:rgba(22,22,32,.95);
+      backdrop-filter:blur(12px);
+    }
+    .steps-inner{
+      max-width:560px;margin:0 auto;
+      padding:14px 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr auto 1fr;
+      align-items:start;
+    }
+    .step{
+      display:flex;flex-direction:column;align-items:center;gap:5px;
+      text-decoration:none;justify-self:center;width:100%;
+      max-width:120px;
+    }
+    .step-circle{
+      width:26px;height:26px;border-radius:50%;
+      background:var(--surface-r);border:1.5px solid var(--bm);
+      display:flex;align-items:center;justify-content:center;
+      transition:all .25s;
+    }
+    .step-icon{font-size:var(--text-micro);font-weight:700;color:var(--accent-primary);font-variant-numeric:tabular-nums;letter-spacing:.02em;transition:color .25s}
+    .step-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);white-space:nowrap;transition:color .25s}
+    /* Current */
+    .step--current .step-circle{border-color:var(--ac);background:var(--ac-d)}
+    .step--current .step-label{color:var(--t1)}
+    /* Done */
+    .step--done .step-circle{background:var(--accent-primary);border-color:var(--accent-primary)}
+    .step--done .step-icon{color:var(--text-on-fill)}
+    .step--done .step-label{color:var(--t2)}
+    /* Connector */
+    .step-conn{
+      height:1px;background:var(--bs);
+      margin-top:12px;min-width:6px;align-self:center;
+      transition:background .3s;
+    }
+    .step-conn--done{background:rgba(0,180,216,.35)}
+
+    /* ═══ Hero ═══ */
+    .hero{padding:clamp(40px,8vw,64px) 24px 48px;text-align:center;max-width:600px;margin:0 auto;scroll-margin-top:var(--site-header-h)}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:var(--text-micro);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-primary);margin-bottom:18px;
+    }
+    .hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--accent-primary);opacity:.5}
+    h1{
+      font-size:clamp(26px,5vw,var(--text-display));
+      font-weight:800;
+      line-height:1.1;
+      letter-spacing:-.02em;
+      color:var(--text-primary);
+      margin-bottom:16px;
+    }
+    @media (min-width: 480px) {
+      h1 { letter-spacing: -0.03em; }
+    }
+    .hero-sub{font-size:clamp(14px,2.5vw,var(--text-body));font-weight:400;color:var(--text-secondary);line-height:1.65;margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto}
+    .hero-cta{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--accent-primary);color:var(--text-on-fill);
+      font-family:inherit;font-size:15px;font-weight:600;
+      padding:15px 26px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
+      min-height:44px;
+    }
+    .hero-cta:hover{background:var(--accent-primary-hover)}
+
+    /* ═══ Section wrapper ═══ */
+    .section{max-width:560px;margin:0 auto;padding:0 24px clamp(56px,10vw,80px);scroll-margin-top:calc(var(--site-header-h) + 8px)}
+    .section-header{
+      display:flex;align-items:center;gap:12px;
+      margin-bottom:28px;padding-top:52px;border-top:1px solid var(--border-subtle);
+    }
+    .section-num{
+      font-size:var(--text-micro);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums;
+      color:var(--text-on-fill);background:var(--accent-primary);
+      width:24px;height:24px;border-radius:6px;
+      display:inline-flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .section-title{font-size:var(--text-heading-2);font-weight:700;letter-spacing:-.01em;color:var(--text-primary)}
+    .section-intro{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.55;margin:-12px 0 22px;max-width:42em}
+    .sep{height:1px;background:var(--bs)}
+
+    /* ═══ Form card ═══ */
+    .form-card{
+      background:var(--surface);border:1px solid var(--bs);
+      border-radius:20px;padding:24px;margin-bottom:20px;
+    }
+    .form-card.hidden{display:none}
+    .form-card h2{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:22px}
+    .fields{display:flex;flex-direction:column;gap:18px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field-header{display:flex;align-items:center;justify-content:space-between}
+    .field-label{font-size:var(--text-micro);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary)}
+    .field-opt{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ac);background:var(--ac-d);padding:2px 7px;border-radius:100px}
+    .input-row{
+      display:flex;align-items:center;
+      background:var(--surface-r);border:1px solid var(--bm);
+      border-radius:10px;overflow:hidden;transition:border-color .15s;
+    }
+    .input-row:focus-within{border-color:var(--ac)}
+    .field-input{
+      flex:1;background:transparent;border:none;outline:none;
+      font-family:inherit;font-size:20px;font-weight:600;
+      font-variant-numeric:tabular-nums lining-nums;color:var(--t1);
+      padding:11px 14px;min-width:0;
+    }
+    .field-input::placeholder{color:var(--t3);font-weight:400}
+    .field-unit{font-size:13px;font-weight:500;color:var(--t3);padding:0 14px 0 0;white-space:nowrap}
+    .field-hint{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);line-height:1.5}
+    .form-actions{margin-top:24px}
+    .btn-calc{
+      width:100%;background:var(--accent-primary);color:var(--text-on-fill);border:none;
+      border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;
+      padding:15px;cursor:pointer;margin-bottom:10px;
+      min-height:48px;
+    }
+    .btn-calc:hover{background:var(--accent-primary-hover)}
+    .privacy-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);text-align:center}
+
+    /* ═══ Results card ═══ */
+    #results{display:none}
+    #results.visible{display:block}
+    .results-card{background:var(--surface);border:1px solid var(--bs);border-radius:22px;overflow:hidden}
+
+    .results-hd{padding:20px 24px 14px;border-bottom:1px solid var(--bs)}
+    .results-hd h2{font-size:var(--text-heading-2);font-weight:800;letter-spacing:-.02em;color:var(--text-primary);margin-bottom:4px}
+    .results-hd p{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary)}
+    .inputs-header{padding:14px 24px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .inputs-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-right:2px}
+    .chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{font-size:11px;font-weight:500;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);padding:4px 10px;border-radius:100px}
+    .change-inputs{font-size:11px;font-weight:600;color:var(--ac);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;margin-left:4px}
+    .change-inputs:hover{color:var(--ac-h)}
+
+    /* Breakdown: shared chart column via subgrid when supported */
+    .breakdown{padding:16px 24px 0}
+    .breakdown-hd{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+    .chart-layout{display:block}
+    .chart-corner{display:none}
+    .axis-row{display:flex;height:20px;margin-left:var(--chart-meta-w);position:relative;margin-bottom:2px}
+    .rows-wrap{display:block;position:relative}
+    @media (max-width:420px){
+      :root{--chart-meta-w:118px}
+      .meta{flex:0 0 118px;padding-right:8px}
+      .fn{font-size:12px}
+    }
+    @supports (grid-template-columns:subgrid){
+      .chart-layout{
+        display:grid;
+        grid-template-columns:var(--chart-meta-w) minmax(0,1fr);
+        align-items:stretch;
+      }
+      .chart-corner{
+        display:block;
+        grid-column:1;
+        grid-row:1;
+        min-height:1px;
+      }
+      .axis-row{
+        grid-column:2;
+        grid-row:1;
+        margin-left:0;
+        align-self:end;
+      }
+      .rows-wrap{display:contents;position:static}
+    }
+    .axis-inner{position:absolute;inset:0}
+    .axis-tick{
+      position:absolute;bottom:3px;
+      font-size:var(--text-micro);font-weight:300;font-variant-numeric:tabular-nums;color:var(--text-tertiary);
+      transform:translateX(-50%);white-space:nowrap;
+    }
+    .axis-tick:first-child{transform:translateX(0)}
+    .axis-tick:last-child{transform:translateX(-100%)}
+
+    .row{
+      display:flex;align-items:center;border-top:1px solid var(--bs);min-height:56px;
+    }
+    @supports (grid-template-columns:subgrid){
+      .row{
+        display:grid;
+        grid-template-columns:subgrid;
+        grid-column:1 / -1;
+        align-items:center;
+      }
+    }
+    .row.locked{opacity:.4}
+    .meta{flex:0 0 var(--chart-meta-w);padding:10px 14px 10px 0}
+    .fn{font-size:13px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:4px}
+    .row.featured .fn{color:var(--accent-primary)}
+    .tag{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:4px}
+    .tag-best{background:var(--ac-d);color:var(--ac)}
+    .fhint{font-size:11px;font-weight:400;color:var(--t3);display:block}
+
+    .ba{flex:1;position:relative;height:56px;min-width:0;overflow:visible}
+    .row:has(.b-slot.b-slot--below) .ba{padding-bottom:22px}
+    .row:has(.b-slot.b-slot--below){min-height:72px;align-items:flex-start}
+    .row:has(.b-slot.b-slot--below) .meta{padding-top:12px}
+    .consensus-col{position:absolute;top:0;bottom:0;background:var(--ac-col);border-left:1px solid var(--ac-cb);border-right:1px solid var(--ac-cb);z-index:0}
+    .gl{position:absolute;top:0;bottom:0;width:1px;background:var(--bs);z-index:1}
+    .bt{position:absolute;inset:0;z-index:2}
+    .b-slot{position:absolute;top:0;bottom:0}
+    .b-visual{
+      position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+      height:20px;border-radius:6px;
+      box-sizing:border-box;
+    }
+    .row.featured .b-visual{background:var(--accent-primary);box-shadow:0 0 20px var(--accent-glow)}
+    .row:not(.featured):not(.locked) .b-visual{background:var(--surface-r);border:1px solid var(--bm)}
+    .b-value{
+      font-size:11px;font-weight:700;font-variant-numeric:tabular-nums lining-nums;
+      white-space:nowrap;line-height:1.2;pointer-events:none;
+    }
+    .b-value--inside{
+      position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .b-value--outside{
+      display:none;position:absolute;color:var(--text-secondary);
+    }
+    .b-slot.is-narrow .b-value--inside{visibility:hidden}
+    .b-slot--below .b-value--outside{
+      display:block;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;
+    }
+    .b-slot--left .b-value--outside{
+      display:block;right:100%;top:50%;transform:translateY(-50%);margin-right:8px;left:auto;
+    }
+    .b-slot--right .b-value--outside{
+      display:block;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;
+    }
+    .row.featured .b-value--inside{color:var(--text-on-fill);font-size:var(--text-small)}
+    .row.featured .b-value--outside{color:var(--text-secondary);font-size:var(--text-small)}
+    .row:not(.featured) .b-value--inside,.row:not(.featured) .b-value--outside{color:var(--text-secondary)}
+
+    /* Sweet spot */
+    .sweet-spot{
+      display:flex;align-items:center;
+      background:var(--surface-i);border-top:1px solid var(--ac-b);
+      margin:0 -24px;width:calc(100% + 48px);
+      min-height:80px;padding:14px 24px;
+    }
+    .ss-meta{
+      flex:0 0 var(--chart-meta-w);
+      padding:10px 14px 10px 0;
+    }
+    @supports (grid-template-columns:subgrid){
+      .sweet-spot{
+        display:grid;
+        grid-template-columns:subgrid;
+        grid-column:1 / -1;
+      }
+    }
+    .ss-eyebrow{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:5px}
+    .ss-nums{display:flex;align-items:center;margin-bottom:3px;line-height:1}
+    .ss-n{
+      font-size:clamp(28px,7vw,40px);
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-variant-numeric:tabular-nums lining-nums;
+      color:var(--text-primary);
+    }
+    .ss-dash{
+      font-size:clamp(22px,5vw,28px);font-weight:500;color:var(--text-primary);
+      margin:0 6px;align-self:center;opacity:.95;
+    }
+    .ss-unit{font-size:12px;font-weight:400;color:var(--t2);margin-left:5px;align-self:flex-end;padding-bottom:2px}
+    .ss-hint{font-size:11px;font-weight:400;color:var(--t3);display:block}
+    .ss-ba{flex:1;position:relative;height:80px;min-width:0}
+    .ss-ba .bt{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%}
+    .ss-bar{
+      position:absolute;top:50%;margin-top:-14px;
+      height:28px;border-radius:8px;box-sizing:border-box;
+      background:var(--ac-d);border:1.5px solid var(--ac);
+      box-shadow:0 0 16px var(--ac-g),0 0 40px rgba(0,180,216,.09);z-index:2;
+    }
+    .ss-bpm{
+      position:absolute;top:50%;
+      font-size:13px;font-weight:800;font-variant-numeric:tabular-nums lining-nums;
+      color:var(--accent-primary);white-space:nowrap;z-index:3;
+      /* vertical center is handled by JS setting top:50% and this transform: */
+    }
+    .ss-bpm-l{transform:translateY(-50%) translateX(calc(-100% - 8px))}
+    .ss-bpm-r{transform:translateY(-50%) translateX(8px)}
+
+    /* Card CTA */
+    .card-cta{padding:16px 24px;border-top:1px solid var(--bs);display:flex;gap:10px}
+    .btn-share{flex:1;background:var(--accent-primary);color:var(--text-on-fill);border:none;border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
+    .btn-share:hover{background:var(--accent-primary-hover)}
+    .btn-recalc{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 18px;cursor:pointer;white-space:nowrap;min-height:44px}
+    @media (max-width:479px){
+      .card-cta{flex-direction:column;align-items:stretch}
+      .btn-recalc{width:100%}
+    }
+
+    /* ═══ Measure ═══ */
+    .measure-intro h3{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:12px;letter-spacing:-.01em}
+    .measure-intro p{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.7;margin-bottom:10px}
+    .measure-intro strong{color:var(--text-primary);font-weight:600}
+    .strap-q{font-size:var(--text-body);font-weight:700;color:var(--text-primary);margin:24px 0 12px}
+    .toggle-group{display:flex;gap:10px;margin-bottom:28px}
+    .toggle-group--experience{flex-direction:column;align-items:stretch}
+    @media (min-width:480px){
+      .toggle-group--experience{flex-direction:row;flex-wrap:nowrap}
+    }
+    .toggle-btn{
+      flex:1;background:var(--surface-raised);color:var(--text-secondary);
+      border:1px solid var(--border);border-radius:12px;
+      font-family:inherit;font-size:var(--text-label);font-weight:600;padding:14px 12px;cursor:pointer;
+      min-height:44px;line-height:1.25;
+    }
+    .toggle-btn.active{background:var(--accent-tint);color:var(--accent-primary);border-color:var(--accent-border)}
+    .tips-card{display:none;background:var(--surface);border:1px solid var(--bs);border-radius:16px;padding:22px}
+    .tips-card.visible{display:block}
+    .tips-card h4{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:12px}
+    .tips-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .tips-list li{font-size:14px;font-weight:400;color:var(--t2);line-height:1.5;padding-left:20px;position:relative}
+    .tips-list li::before{content:'→';position:absolute;left:0;color:var(--ac);font-size:12px}
+
+    /* Product grid */
+    .product-grid{display:none;flex-direction:column;gap:12px}
+    .product-grid.visible{display:flex}
+    @media(min-width:480px){.product-grid.visible{display:grid;grid-template-columns:repeat(3,1fr)}}
+    .product-card{background:var(--surface);border:1px solid var(--bs);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+    .product-img{background:var(--surface-i);height:100px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--bs)}
+    .product-body{padding:14px;display:flex;flex-direction:column;flex:1}
+    .product-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:7px;align-self:flex-start}
+    .badge-pick{background:var(--ac-d);color:var(--ac)}
+    .badge-value{background:rgba(249,198,35,.12);color:var(--zone-3)}
+    .product-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:5px}
+    .product-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5;margin-bottom:12px;flex:1}
+    .product-footer{display:flex;align-items:center;justify-content:space-between}
+    .product-price{font-size:12px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums}
+    .btn-buy{font-size:12px;font-weight:700;color:var(--ac);text-decoration:none;background:var(--ac-d);border:1px solid var(--ac-b);border-radius:8px;padding:5px 10px;white-space:nowrap}
+    .affiliate-note{font-size:11px;font-weight:400;color:var(--t3);margin-top:14px;line-height:1.5}
+
+    /* ═══ Train / Playlists ═══ */
+    .train-intro{font-size:15px;font-weight:400;color:var(--t2);line-height:1.7;margin-bottom:28px}
+    .activity-group{margin-bottom:32px}
+    .activity-header{
+      display:flex;align-items:center;gap:10px;margin-bottom:14px;
+      padding-bottom:10px;border-bottom:1px solid var(--bs);
+    }
+    .activity-icon{
+      width:28px;height:28px;border-radius:7px;background:var(--surface-r);
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;
+    }
+    .activity-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
+    .activity-count{font-size:11px;font-weight:500;color:var(--t3)}
+
+    .playlist-grid{display:flex;flex-direction:column;gap:10px}
+    @media(min-width:400px){.playlist-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}}
+
+    .pl-card{background:var(--surface);border:1px solid var(--bs);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .pl-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .pl-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3}
+    .pl-duration{font-size:11px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .pl-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5}
+    .pl-footer{display:flex;align-items:center;justify-content:space-between}
+    .btn-spotify{
+      font-size:11px;font-weight:700;color:#1DB954;
+      background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);
+      border-radius:8px;padding:5px 10px;text-decoration:none;white-space:nowrap;
+    }
+    .btn-soon{font-size:11px;font-weight:600;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);border-radius:8px;padding:5px 10px;white-space:nowrap;cursor:default}
+
+    .pl-coming-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);margin-top:4px}
+    .pl-spotify-inline{color:var(--accent-primary);text-decoration:none;font-weight:600}
+    .pl-spotify-inline:hover{color:var(--accent-primary-hover)}
+
+    .spotify-link{
+      display:inline-flex;align-items:center;gap:8px;margin-top:8px;
+      font-size:13px;font-weight:600;color:var(--ac);text-decoration:none;
+    }
+    .spotify-link:hover{color:var(--ac-h)}
+
+    /* ═══ Support / Tip ═══ */
+    .support-wrap{max-width:560px;margin:0 auto;padding:0 24px 48px}
+    .support-card{
+      background:var(--surface);border:1px solid var(--bs);border-radius:20px;
+      padding:28px 24px;text-align:center;
+    }
+    .support-icon{font-size:28px;margin-bottom:12px;display:block}
+    .support-card h3{font-size:17px;font-weight:800;letter-spacing:-.015em;color:var(--t1);margin-bottom:8px}
+    .support-card p{font-size:14px;font-weight:400;color:var(--t2);line-height:1.65;margin-bottom:20px;max-width:340px;margin-left:auto;margin-right:auto}
+    .btn-bmc{
+      display:inline-flex;align-items:center;gap:8px;
+      background:#FFDD00;color:#1a1a1a;
+      font-family:inherit;font-size:14px;font-weight:700;
+      padding:13px 22px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
+    }
+    .btn-bmc:hover{background:#f0ce00}
+    .btn-bmc svg{flex-shrink:0}
+
+    /* ═══ Footer ═══ */
+    .prefooter-feedback{
+      text-align:center;margin:20px auto 0;padding:0 8px;
+      max-width:340px;width:100%;
+    }
+    .prefooter-feedback p{
+      font-size:15px;font-weight:500;color:var(--text-secondary);
+      line-height:1.3;white-space:nowrap;
+    }
+    @media (max-width:380px){
+      .prefooter-feedback p{font-size:12px;letter-spacing:-0.02em}
+    }
+    .prefooter-feedback a{color:var(--accent-primary);font-weight:600;text-decoration:none}
+    .prefooter-feedback a:hover{color:var(--accent-primary-hover);text-decoration:underline}
+    footer{border-top:1px solid var(--bs);padding:28px 24px;text-align:center;max-width:560px;margin:0 auto}
+    .footer-copy{font-size:12px;font-weight:400;color:var(--t3);line-height:1.6}
+    .footer-disc{font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5;opacity:.7}
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+<!-- ══ Nav ══ -->
+<nav>
+  <!--
+    Logo file: Brand/logo/logo dark.png
+    The space in the filename requires %20 encoding in HTML src attributes.
+  -->
+  <img class="nav-logo" src="data:image/png;base64,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" alt="Zone 2 For You">
+</nav>
+
+<!-- ══ Zone strip ══ -->
+<div class="zstrip">
+  <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
+  <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
+  <div style="background:var(--zone-5)"></div>
+</div>
+
+<!-- ══ Step progress bar ══ -->
+<div class="steps-bar">
+  <div class="steps-inner">
+    <a class="step step--current" id="step-1" href="#calculate">
+      <div class="step-circle"><span class="step-icon">01</span></div>
+      <span class="step-label">Calculate</span>
+    </a>
+    <div class="step-conn" id="conn-1-2"></div>
+    <a class="step" id="step-2" href="#measure">
+      <div class="step-circle"><span class="step-icon">02</span></div>
+      <span class="step-label">Measure</span>
+    </a>
+    <div class="step-conn" id="conn-2-3"></div>
+    <a class="step" id="step-3" href="#train">
+      <div class="step-circle"><span class="step-icon">03</span></div>
+      <span class="step-label">Train</span>
+    </a>
+  </div>
+</div>
+</header>
+
+<!-- ══ Hero ══ -->
+<section class="hero">
+  <div class="hero-eyebrow">Zone 2 Training</div>
+  <h1>Your Zone 2 range, clear and ready to use.</h1>
+  <p class="hero-sub">Get one range from the inputs that matter for you, without reconciling competing formulas.</p>
+  <a href="#calculate" class="hero-cta">
+    Calculate my Zone 2
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+      <path d="M7.5 2.5v7M4 9.5l3.5 3 3.5-3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ══════════════════════════════════
+     SECTION 01: CALCULATE
+     State A: Form (default)
+     State B: Results (after submit)
+     Only one is visible at a time.
+══════════════════════════════════ -->
+<div class="section" id="calculate">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <span class="section-title">Calculate</span>
+  </div>
+  <p class="section-intro">Enter your age and optional heart rate details. We compare common Zone 2 formulas and surface one clear range to use.</p>
+
+  <!-- State A: Input form -->
+  <div class="form-card" id="form-card">
+    <h2>Enter your numbers</h2>
+    <div class="fields">
+      <div class="field">
+        <div class="field-header">
+          <label class="field-label" for="age">Age</label>
+        </div>
+        <div class="input-row">
+          <input class="field-input" type="number" id="age" min="15" max="80" placeholder="38" inputmode="numeric" value="38">
+          <span class="field-unit">years</span>
+        </div>
+        <span class="field-hint">Used by every formula.</span>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label class="field-label" for="rhr">Resting Heart Rate</label>
+          <span class="field-opt">Optional</span>
+        </div>
+        <div class="input-row">
+          <input class="field-input" type="number" id="rhr" min="30" max="100" placeholder="Optional" inputmode="numeric" value="54">
+          <span class="field-unit">bpm</span>
+        </div>
+        <span class="field-hint">Measure first thing in the morning before getting up. Unlocks Karvonen, the most personalized formula.</span>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label class="field-label" for="maxhr">Max Heart Rate</label>
+          <span class="field-opt">Optional</span>
+        </div>
+        <div class="input-row">
+          <input class="field-input" type="number" id="maxhr" min="130" max="220" placeholder="Optional" inputmode="numeric" value="183">
+          <span class="field-unit">bpm</span>
+        </div>
+        <span class="field-hint">From a lab test or a true all-out effort. If unknown, we estimate with 220 minus Age.</span>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label class="field-label">Training Experience</label>
+        </div>
+        <div class="toggle-group toggle-group--experience" style="margin-bottom:0">
+          <button type="button" class="toggle-btn" id="fit-beginner" onclick="setFitness('beginner')">Starting out</button>
+          <button type="button" class="toggle-btn active" id="fit-intermediate" onclick="setFitness('intermediate')">1&ndash;2 years</button>
+          <button type="button" class="toggle-btn" id="fit-advanced" onclick="setFitness('advanced')">2+ years consistent</button>
+        </div>
+        <span class="field-hint">Used to recommend the right formula for your situation and adjust the Maffetone range.</span>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn-calc" onclick="calculate()">Calculate my Zone 2</button>
+      <p class="privacy-note">Your data never leaves your browser.</p>
+    </div>
+  </div>
+
+  <!-- State B: Results chart -->
+  <div id="results">
+    <div class="results-card">
+      <div class="zstrip">
+        <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
+        <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
+        <div style="background:var(--zone-5)"></div>
+      </div>
+
+      <div class="results-hd">
+        <h2>Your Zone 2 range</h2>
+        <p>Based on your inputs, here is how the formulas compare.</p>
+      </div>
+
+      <div class="inputs-header">
+        <span class="inputs-label">Results for</span>
+        <div class="chips" id="chips"></div>
+        <button type="button" class="change-inputs" onclick="backToForm()">Change inputs</button>
+      </div>
+      <div class="sep"></div>
+
+      <div class="breakdown">
+        <div class="breakdown-hd">Formula breakdown</div>
+        <div class="chart-layout">
+          <div class="chart-corner" aria-hidden="true"></div>
+          <div class="axis-row"><div class="axis-inner" id="axis-inner"></div></div>
+          <div class="rows-wrap" id="formula-rows"></div>
+          <div class="sweet-spot">
+            <div class="ss-meta">
+              <span class="ss-eyebrow">Zone 2 Sweet Spot</span>
+              <div class="ss-nums">
+                <span class="ss-n" id="ss-n-lo">–</span>
+                <span class="ss-dash">-</span>
+                <span class="ss-n" id="ss-n-hi">–</span>
+                <span class="ss-unit">bpm</span>
+              </div>
+              <span class="ss-hint" id="ss-hint"></span>
+            </div>
+            <div class="ss-ba" id="ss-ba">
+              <span class="ss-bpm ss-bpm-l" id="ss-bpm-l"></span>
+              <span class="ss-bpm ss-bpm-r" id="ss-bpm-r"></span>
+              <div class="bt"><div class="ss-bar" id="ss-bar"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-cta">
+        <button type="button" class="btn-share" id="btn-share" onclick="shareZone2()">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0" aria-hidden="true">
+            <rect x="2.5" y="5.5" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M7.5 1v7M4.5 3.5l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="btn-share-label">Share my Zone 2</span>
+        </button>
+        <button type="button" class="btn-recalc" onclick="backToForm()">Recalculate</button>
+      </div>
+
+      <div class="zstrip">
+        <div style="background:var(--zone-1)"></div><div style="background:var(--zone-2)"></div>
+        <div style="background:var(--zone-3)"></div><div style="background:var(--zone-4)"></div>
+        <div style="background:var(--zone-5)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 02: MEASURE
+══════════════════════════════════ -->
+<div class="section" id="measure">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-title">Measure</span>
+  </div>
+
+  <div class="measure-intro">
+    <h3>Now measure it right.</h3>
+    <p>Knowing your Zone 2 range is step one. Staying in it while you train is step two. And that depends entirely on how you measure heart rate.</p>
+    <p>Wrist-based optical sensors (Apple Watch, Garmin Fenix, Whoop) can lag <strong>30 seconds or more</strong> in steady-state aerobic work. That's enough to drift into Zone 3 without realizing it.</p>
+    <p>A chest strap reads every beat in real time, with ECG-level accuracy. It's what Zone 2 training was designed around.</p>
+  </div>
+
+  <p class="strap-q">Do you train with a chest strap?</p>
+  <div class="toggle-group">
+    <button type="button" class="toggle-btn" id="btn-has-strap" onclick="setHasStrap(true)">Yes, I have one</button>
+    <button type="button" class="toggle-btn active" id="btn-no-strap" onclick="setHasStrap(false)">Not yet</button>
+  </div>
+
+  <div class="tips-card" id="tips-card">
+    <h4>A few things to check.</h4>
+    <ul class="tips-list">
+      <li>Wet the electrodes before each session. Dry skin causes signal dropouts.</li>
+      <li>Wear it snug, just below the pectoral muscles. It should not bounce.</li>
+      <li>In Garmin and Apple Watch: set HR source to the external strap before starting your activity.</li>
+      <li>Give it 2 minutes to stabilize before trusting the reading.</li>
+    </ul>
+  </div>
+
+  <div class="product-grid visible" id="product-grid">
+    <div class="product-card">
+      <div class="product-img">
+        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
+          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
+            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="product-body">
+        <span class="product-badge badge-pick">Editor's pick</span>
+        <p class="product-name">Polar H10</p>
+        <p class="product-desc">Beat-by-beat ECG accuracy. Bluetooth and ANT+. Battery lasts a year.</p>
+        <div class="product-footer">
+          <span class="product-price">~$90</span>
+          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
+          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
+            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="product-body">
+        <p class="product-name">Garmin HRM-Pro Plus</p>
+        <p class="product-desc">Stores data on the strap itself. Great for the gym or when you leave your watch behind.</p>
+        <div class="product-footer">
+          <span class="product-price">~$130</span>
+          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <svg width="90" height="36" viewBox="0 0 90 36" fill="none">
+          <polyline points="0,18 10,18 16,4 23,32 30,12 36,24 42,18 48,18 54,7 62,29 67,14 72,22 78,18 90,18"
+            stroke="#00B4D8" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.65"/>
+        </svg>
+      </div>
+      <div class="product-body">
+        <span class="product-badge badge-value">Best value</span>
+        <p class="product-name">Wahoo TICKR</p>
+        <p class="product-desc">Accurate, simple, pairs with virtually any app or device. The easiest entry point.</p>
+        <div class="product-footer">
+          <span class="product-price">~$50</span>
+          <a class="btn-buy" href="#" onclick="return false">Amazon →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="affiliate-note" id="aff-note">Affiliate links. We earn a small commission at no cost to you. It does not affect which products we recommend.</p>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 03: TRAIN
+     Curated playlists for Zone 2 sessions.
+     Organized by activity. Built to match Zone 2 effort:
+     flat energy arc, no spikes, 60-minute sessions.
+══════════════════════════════════ -->
+<div class="section" id="train">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-title">Train</span>
+  </div>
+
+  <p class="train-intro">
+    The right soundtrack keeps you in the zone. These playlists are built for Zone 2 effort: consistent energy, no tempo spikes, 60-minute arcs that hold you steady instead of pushing you out.
+  </p>
+
+  <!-- Run -->
+  <div class="activity-group">
+    <div class="activity-header">
+      <div class="activity-icon">🏃</div>
+      <span class="activity-label">Run</span>
+      <span class="activity-count">3 playlists</span>
+    </div>
+    <div class="playlist-grid">
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Hip Hop &amp; R&amp;B</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Groove-based. Steady soul and R&B energy with a flat arc that holds your pace.</p>
+        <div class="pl-footer">
+          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">90s Rock Hits</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Anthemic mid-tempo rock. Cinematic opener, steady mid-section, reflective close.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Lo-Fi Focus</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Almost flat arc. 80-95 BPM throughout. For people who prefer focus over energy.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ride -->
+  <div class="activity-group">
+    <div class="activity-header">
+      <div class="activity-icon">🚴</div>
+      <span class="activity-label">Ride</span>
+      <span class="activity-count">3 playlists</span>
+    </div>
+    <div class="playlist-grid">
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Latin</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Salsa to reggaeton arc. Consistent rhythm, good pedal groove throughout.</p>
+        <div class="pl-footer">
+          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Afrobeats</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Steady dembow and Afrobeats groove. One of the best genres for steady-state riding.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Electronic / Tropical House</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Melodic house. No hard techno, no aggressive drops. Steady build and ease-out.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Walk -->
+  <div class="activity-group">
+    <div class="activity-header">
+      <div class="activity-icon">🚶</div>
+      <span class="activity-label">Walk</span>
+      <span class="activity-count">4 playlists</span>
+    </div>
+    <div class="playlist-grid">
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Lo-Fi Chill</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Meditative throughout. For decompression walks, not performance. Almost flat arc.</p>
+        <div class="pl-footer">
+          <a class="btn-spotify" href="https://open.spotify.com" target="_blank">Open on Spotify</a>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Lo-Fi Chill</span>
+          <span class="pl-duration">30 min</span>
+        </div>
+        <p class="pl-desc">Best-of from the 60-min version. For lunch walks or short sessions.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Indie Acoustic</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Quiet opener, warm mid-section, still close. Best for morning or evening walks.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="pl-card">
+        <div class="pl-top">
+          <span class="pl-name">Country</span>
+          <span class="pl-duration">60 min</span>
+        </div>
+        <p class="pl-desc">Narrative storytelling pairs naturally with long walks. Motivational mid-section.</p>
+        <div class="pl-footer">
+          <span class="btn-soon">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="pl-coming-note">More playlists coming. Follow <a href="https://open.spotify.com" target="_blank" class="pl-spotify-inline">Zone 2 For You on Spotify</a> to get them as they drop.</p>
+</div>
+
+<!-- ══ Support ══ -->
+<div class="support-wrap">
+  <div class="support-card">
+    <span class="support-icon">☕</span>
+    <h3>If this helped, consider supporting it.</h3>
+    <p>If you got something out of the calculator, a coffee helps keep it going.</p>
+    <a class="btn-bmc" href="https://www.buymeacoffee.com" target="_blank">
+      <!-- Coffee cup icon -->
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 5h9v6a3 3 0 01-3 3H5a3 3 0 01-3-3V5z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width=".5"/>
+        <path d="M11 6h1.5a1.5 1.5 0 010 3H11" stroke="#1a1a1a" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M5 2c0-.6.6-1 1-1.5S7 0 7 .5" stroke="#1a1a1a" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Buy me a coffee
+    </a>
+  </div>
+  <div class="prefooter-feedback">
+    <p>Found a bug or want a feature? <a href="mailto:feedback@zone2foryou.com?subject=Zone%202%20For%20You%20feedback">Let us know!</a></p>
+  </div>
+</div>
+
+<!-- ══ Footer ══ -->
+<footer>
+  <p class="footer-copy">© 2026 Hatch and Scale LLC</p>
+  <p class="footer-disc">Results are estimates based on established formulas. Not medical advice. Consult a physician or certified coach before beginning any heart rate training program.</p>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════
+   Fitness level state
+   'beginner' | 'intermediate' | 'advanced'
+   Drives Maffetone adjustment and formula priority.
+════════════════════════════════════════════ */
+let fitnessLevel = 'intermediate';
+
+function setFitness(level) {
+  fitnessLevel = level;
+  ['beginner', 'intermediate', 'advanced'].forEach(l => {
+    const btn = document.getElementById('fit-' + l);
+    if (btn) btn.classList.toggle('active', l === level);
+  });
+}
+
+/* ════════════════════════════════════════════
+   Formula engine
+   Formulas: Karvonen, Maffetone, % Max HR, 220-Age.
+   Karvonen requires resting HR. Others use age (+ optional actual max HR).
+   Fitness level adjusts Maffetone and shifts formula priority.
+   Consensus: strict intersection first; if none, try dropping one outlier (N-1).
+════════════════════════════════════════════ */
+
+function computeFormulas(age, rhr, maxHR) {
+  const estMax = maxHR || (220 - age);
+  const rows = [];
+
+  // Maffetone adjustment: Maffetone himself prescribed ±5 based on training history.
+  // Beginner/rebuilding: −5 (conservative, build aerobic base safely)
+  // Consistent 2+ years making progress: +5 (credit for aerobic adaptation)
+  const mafAdj   = fitnessLevel === 'beginner' ? -5 : fitnessLevel === 'advanced' ? 5 : 0;
+  const mafBase  = 180 - age + mafAdj;
+  const mafHint  = mafAdj ===  5 ? 'Adjusted +5. 2+ years consistent training.'
+                 : mafAdj === -5 ? 'Adjusted \u22125. Building aerobic base safely.'
+                 :                 'Standard aerobic base-building reference.';
+
+  // Karvonen (requires RHR). Most personalized; especially accurate for fit athletes
+  // with a low RHR and tested max HR.
+  if (rhr) {
+    const hrr = estMax - rhr;
+    // Advanced athletes with RHR → Karvonen is most accurate; beginners → Maffetone leads
+    const karPriority = fitnessLevel === 'beginner' ? 2 : 1;
+    rows.push({ id:'karvonen', name:'Karvonen',
+      hint: maxHR ? 'Uses your tested max HR + resting HR. Highest accuracy.'
+                  : 'Uses heart rate reserve. More personalized than age-only formulas.',
+      low: Math.round(hrr * 0.60 + rhr), high: Math.round(hrr * 0.70 + rhr),
+      priority: karPriority, locked: false });
+  } else {
+    rows.push({ id:'karvonen', name:'Karvonen',
+      hint:'Enter resting HR above to unlock. Most personalized formula.',
+      low: null, high: null, priority: 4, locked: true });
+  }
+
+  // Maffetone. Leads when no RHR, or when beginner (conservative range is intentional)
+  const mafPriority = fitnessLevel === 'beginner' ? 1
+                    : rhr ? 2
+                    : 1;
+  rows.push({ id:'maffetone', name:'Maffetone', hint: mafHint,
+    low: mafBase - 10, high: mafBase,
+    priority: mafPriority, locked: false });
+
+  // % of Max HR. Preferred when tested max HR is known and no RHR
+  const pctPriority = rhr ? 3
+                    : maxHR ? (fitnessLevel === 'advanced' ? 1 : 2)
+                    : 2;
+  rows.push({ id:'pctmax', name:'% of Max HR',
+    hint: maxHR ? 'Based on your tested max HR. Reliable when max is confirmed.'
+                : 'Based on estimated max HR (220 \u2212 Age). Add your actual max above for accuracy.',
+    low: Math.round(estMax * 0.65), high: Math.round(estMax * 0.75),
+    priority: pctPriority, locked: false });
+
+  // 220 − Age. Least personalized; deprioritized for advanced athletes over ~45
+  // because estimated max HR commonly underestimates for trained older athletes.
+  const ageNote = (age > 45 && fitnessLevel === 'advanced')
+    ? '220 \u2212 Age tends to underestimate max HR for fit athletes over 45'
+    : 'Widely used starting point; less accurate for fit or older athletes';
+  rows.push({ id:'age220', name:'220 \u2212 Age', hint: ageNote,
+    low: Math.round((220 - age) * 0.60), high: Math.round((220 - age) * 0.70),
+    priority: rhr ? 5 : 3, locked: false });
+
+  rows.sort((a, b) => a.priority - b.priority);
+  const first = rows.find(r => !r.locked);
+  if (first) first.featured = true;
+  return rows;
+}
+
+function computeConsensus(formulas) {
+  const unlocked = formulas.filter(f => !f.locked);
+
+  // Try strict intersection of all
+  const sLo = Math.max(...unlocked.map(f => f.low));
+  const sHi = Math.min(...unlocked.map(f => f.high));
+  if (sLo <= sHi) {
+    return { low: sLo, high: sHi, note: 'All formulas overlap in this range.' };
+  }
+
+  // No strict overlap. Try dropping one formula at a time
+  let best = null;
+  const n = unlocked.length;
+  for (let i = 0; i < n; i++) {
+    const sub = unlocked.filter((_, j) => j !== i);
+    const lo = Math.max(...sub.map(f => f.low));
+    const hi = Math.min(...sub.map(f => f.high));
+    if (lo <= hi && (!best || (hi - lo) > (best.high - best.low))) {
+      best = {
+        low: lo,
+        high: hi,
+        note: 'This band is where ' + (n - 1) + ' of ' + n + ' formula ranges overlap.'
+      };
+    }
+  }
+  if (best) return best;
+
+  // Complete divergence. Use midpoint of medians as a reasonable estimate
+  const mids = unlocked.map(f => Math.round((f.low + f.high) / 2)).sort((a,b)=>a-b);
+  const center = mids[Math.floor(mids.length / 2)];
+  return {
+    low: center - 3,
+    high: center + 3,
+    note: 'No shared overlap across all formulas. This midpoint is a practical estimate from the ranges above.'
+  };
+}
+
+function computeScale(formulas) {
+  const unlocked = formulas.filter(f => !f.locked);
+  const rawMin = Math.min(...unlocked.map(f => f.low));
+  const rawMax = Math.max(...unlocked.map(f => f.high));
+  return {
+    min: Math.floor((rawMin - 8) / 10) * 10,
+    max: Math.ceil((rawMax  + 8) / 10) * 10
+  };
+}
+
+/** Percent along chart track (same scale as axis ticks and formula bars). */
+function pctOnScale(bpm, s) {
+  return ((bpm - s.min) / (s.max - s.min)) * 100;
+}
+function widthPct(lo, hi, s) {
+  return ((hi - lo) / (s.max - s.min)) * 100;
+}
+
+function layoutFormulaBarLabels() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.b-slot').forEach(slot => {
+      const visual = slot.querySelector('.b-visual');
+      const inner = slot.querySelector('.b-value--inside .bv-range');
+      if (!visual || !inner) return;
+      const ba = slot.closest('.ba');
+      if (!ba) return;
+      slot.classList.remove('is-narrow', 'b-slot--left', 'b-slot--right', 'b-slot--below');
+      const barW = visual.clientWidth;
+      const tw = inner.scrollWidth;
+      const pad = 8;
+      if (tw <= barW - pad) return;
+      slot.classList.add('is-narrow');
+      const baRect = ba.getBoundingClientRect();
+      const slotRect = slot.getBoundingClientRect();
+      const spaceLeft = slotRect.left - baRect.left;
+      const spaceRight = baRect.right - slotRect.right;
+      if (spaceRight >= tw + pad) {
+        slot.classList.add('b-slot--right');
+      } else if (spaceLeft >= tw + pad) {
+        slot.classList.add('b-slot--left');
+      } else {
+        slot.classList.add('b-slot--below');
+      }
+    });
+  });
+}
+
+async function shareZone2() {
+  const loEl = document.getElementById('ss-n-lo');
+  const hiEl = document.getElementById('ss-n-hi');
+  const btn = document.getElementById('btn-share');
+  const label = btn && btn.querySelector('.btn-share-label');
+  if (!loEl || !hiEl || !btn || !label) return;
+  const lo = loEl.textContent.trim();
+  const hi = hiEl.textContent.trim();
+  const text = 'My Zone 2 range (Zone 2 For You): ' + lo + '-' + hi + ' bpm';
+  const url = window.location.href.split('#')[0];
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Zone 2 For You', text: text, url: url });
+      return;
+    }
+  } catch (e) {
+    if (e && e.name === 'AbortError') return;
+  }
+  const full = text + (url ? '\n' + url : '');
+  try {
+    await navigator.clipboard.writeText(full);
+    const prev = label.textContent;
+    label.textContent = 'Copied to clipboard';
+    btn.disabled = true;
+    setTimeout(() => {
+      label.textContent = prev;
+      btn.disabled = false;
+    }, 2200);
+    return;
+  } catch (e) {
+    /* clipboard may be unavailable */
+  }
+  window.prompt('Copy this text:', full);
+}
+
+/* ════════════════════════════════════════════
+   Render the chart
+════════════════════════════════════════════ */
+function renderChart(formulas, consensus, scale) {
+  const ticks = [];
+  for (let b = scale.min; b <= scale.max; b += 10) ticks.push(b);
+
+  document.getElementById('axis-inner').innerHTML = ticks.map(b =>
+    `<span class="axis-tick" style="left:${pctOnScale(b, scale)}%">${b}</span>`
+  ).join('');
+
+  const gls = ticks.map(b =>
+    `<div class="gl" style="left:${pctOnScale(b, scale)}%"></div>`
+  ).join('');
+  const colL = pctOnScale(consensus.low, scale);
+  const colW = widthPct(consensus.low, consensus.high, scale);
+  const col = `<div class="consensus-col" style="left:${colL}%;width:${colW}%"></div>`;
+
+  document.getElementById('formula-rows').innerHTML = formulas.map(f => {
+    if (f.locked) {
+      return `
+      <div class="row locked">
+        <div class="meta"><span class="fn">${f.name}</span><span class="fhint">${f.hint}</span></div>
+        <div class="ba">${col}${gls}</div>
+      </div>`;
+    }
+    const bL = pctOnScale(f.low, scale);
+    const bW = widthPct(f.low, f.high, scale);
+    const rangeText = f.low + ' - ' + f.high;
+    return `
+      <div class="row ${f.featured ? 'featured' : ''}">
+        <div class="meta">
+          <span class="fn">${f.name}</span>
+          ${f.featured ? '<span class="tag tag-best">Best for you</span>' : ''}
+          <span class="fhint">${f.hint}</span>
+        </div>
+        <div class="ba">
+          ${col}${gls}
+          <div class="bt">
+            <div class="b-slot" style="left:${bL}%;width:${bW}%">
+              <div class="b-visual"></div>
+              <div class="b-value b-value--inside"><span class="bv-range">${rangeText}</span></div>
+              <div class="b-value b-value--outside"><span class="bv-range">${rangeText}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const ssL = pctOnScale(consensus.low, scale);
+  const ssW = widthPct(consensus.low, consensus.high, scale);
+  const bar = document.getElementById('ss-bar');
+  bar.style.left = ssL + '%';
+  bar.style.width = ssW + '%';
+
+  const bpmL = document.getElementById('ss-bpm-l');
+  bpmL.textContent = consensus.low;
+  bpmL.style.top = '50%';
+  bpmL.style.left = ssL + '%';
+
+  const bpmR = document.getElementById('ss-bpm-r');
+  bpmR.textContent = consensus.high;
+  bpmR.style.top = '50%';
+  bpmR.style.left = (ssL + ssW) + '%';
+
+  document.getElementById('ss-n-lo').textContent = consensus.low;
+  document.getElementById('ss-n-hi').textContent = consensus.high;
+  document.getElementById('ss-hint').textContent = consensus.note;
+
+  layoutFormulaBarLabels();
+  requestAnimationFrame(() => {
+    layoutFormulaBarLabels();
+  });
+}
+
+/* ════════════════════════════════════════════
+   Calculate. Hides form, shows results
+════════════════════════════════════════════ */
+function calculate() {
+  const ageVal   = document.getElementById('age').value.trim();
+  const rhrVal   = document.getElementById('rhr').value.trim();
+  const maxHRVal = document.getElementById('maxhr').value.trim();
+
+  const age   = parseInt(ageVal);
+  const rhr   = rhrVal   ? parseInt(rhrVal)   : null;
+  const maxHR = maxHRVal ? parseInt(maxHRVal) : null;
+
+  if (!age || age < 15 || age > 80) { document.getElementById('age').focus(); return; }
+
+  const formulas  = computeFormulas(age, rhr, maxHR);
+  const consensus = computeConsensus(formulas);
+  const scale     = computeScale(formulas);
+
+  renderChart(formulas, consensus, scale);
+
+  // Chips
+  document.getElementById('chips').innerHTML = [
+    `<span class="chip">Age ${age}</span>`,
+    rhr   ? `<span class="chip">RHR ${rhr} bpm</span>`     : `<span class="chip">RHR estimated</span>`,
+    maxHR ? `<span class="chip">Max HR ${maxHR} bpm</span>` : `<span class="chip">Max HR estimated</span>`
+  ].join('');
+
+  // Swap form → results
+  document.getElementById('form-card').classList.add('hidden');
+  const results = document.getElementById('results');
+  results.classList.add('visible');
+  setTimeout(() => results.scrollIntoView({ behavior:'smooth', block:'nearest' }), 80);
+
+}
+
+function backToForm() {
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('form-card').classList.remove('hidden');
+  document.getElementById('calculate').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ════════════════════════════════════════════
+   Step indicator. Scroll-driven via IntersectionObserver
+   Steps fill cyan with ✓ as the user scrolls into each section.
+════════════════════════════════════════════ */
+const sectionOrder = ['calculate', 'measure', 'train'];
+
+function setStepState(stepNum, state) {
+  const el = document.getElementById(`step-${stepNum}`);
+  if (state === 'done') {
+    el.className = 'step step--done';
+    el.querySelector('.step-icon').textContent = '✓';
+    if (stepNum < 3) document.getElementById(`conn-${stepNum}-${stepNum+1}`).classList.add('step-conn--done');
+  } else if (state === 'current') {
+    if (!el.classList.contains('step--done')) {
+      el.className = 'step step--current';
+    }
+  }
+}
+
+const stepObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const idx = sectionOrder.indexOf(entry.target.id);
+    if (idx === -1) return;
+    const stepNum = idx + 1;
+    // All prior steps → done
+    for (let i = 1; i < stepNum; i++) setStepState(i, 'done');
+    // This step → current (if not already done)
+    setStepState(stepNum, 'current');
+  });
+}, {
+  /* Fires when the top of a section crosses into the upper 40% of the viewport */
+  rootMargin: '0px 0px -60% 0px',
+  threshold: 0
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  sectionOrder.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) stepObserver.observe(el);
+  });
+});
+
+let resizeBarLabelTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeBarLabelTimer);
+  resizeBarLabelTimer = setTimeout(layoutFormulaBarLabels, 100);
+});
+
+/* ════════════════════════════════════════════
+   Measure toggle
+════════════════════════════════════════════ */
+function setHasStrap(hasOne) {
+  document.getElementById('btn-has-strap').classList.toggle('active',  hasOne);
+  document.getElementById('btn-no-strap').classList.toggle('active', !hasOne);
+  document.getElementById('tips-card').classList.toggle('visible',  hasOne);
+  document.getElementById('product-grid').classList.toggle('visible', !hasOne);
+  document.getElementById('aff-note').style.display = hasOne ? 'none' : '';
+
+}
+
+/* Auto-calculate with pre-filled values on load */
+window.addEventListener('DOMContentLoaded', calculate);
+</script>
+</body>
+</html>
