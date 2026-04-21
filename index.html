@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      if (window.location.protocol === 'http:') {
+        window.location.replace(`https://${window.location.host}${window.location.pathname}${window.location.search}${window.location.hash}`);
+      }
+    })();
+  </script>
   <title>Zone 2 For You | Heart rate calculator for your Zone 2 range</title>
   <meta name="description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, and 220 minus age in one place. Get a clear range from the inputs you trust. Not medical advice.">
   <link rel="canonical" href="https://zone2foryou.com/">
@@ -31,6 +38,15 @@
   <!-- Favicons (paths relative to this HTML file; use same files on the live host) -->
   <link rel="icon" href="images/z24u-logo_dark.png" type="image/png">
   <link rel="apple-touch-icon" href="images/z24u-logo_dark.png">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-95GMLXCSTF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-95GMLXCSTF');
+  </script>
 
   <script type="application/ld+json">
   {
@@ -1134,6 +1150,11 @@
 
 <script>
 /* Reload / refresh: scroll to top (see head script for scrollRestoration). */
+function trackEvent(eventName, params) {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('event', eventName, params || {});
+}
+
 function scrollDocumentToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 }
@@ -1174,6 +1195,7 @@ function setFitness(level) {
     const btn = document.getElementById('fit-' + l);
     if (btn) btn.classList.toggle('active', l === level);
   });
+  trackEvent('fitness_level_selected', { fitness_level: level });
 }
 
 /* ════════════════════════════════════════════
@@ -1343,10 +1365,18 @@ async function shareZone2() {
   try {
     if (navigator.share) {
       await navigator.share({ title: 'Zone 2 For You', text: text, url: url });
+      trackEvent('share_zone2', {
+        share_method: 'native_share',
+        zone2_low: lo,
+        zone2_high: hi
+      });
       return;
     }
   } catch (e) {
-    if (e && e.name === 'AbortError') return;
+    if (e && e.name === 'AbortError') {
+      trackEvent('share_zone2_cancelled', { share_method: 'native_share' });
+      return;
+    }
   }
   const full = text + (url ? '\n' + url : '');
   try {
@@ -1358,10 +1388,20 @@ async function shareZone2() {
       label.textContent = prev;
       btn.disabled = false;
     }, 2200);
+    trackEvent('share_zone2', {
+      share_method: 'clipboard',
+      zone2_low: lo,
+      zone2_high: hi
+    });
     return;
   } catch (e) {
     /* clipboard may be unavailable */
   }
+  trackEvent('share_zone2', {
+    share_method: 'manual_copy_prompt',
+    zone2_low: lo,
+    zone2_high: hi
+  });
   window.prompt('Copy this text:', full);
 }
 
@@ -1447,7 +1487,11 @@ function calculate() {
   const rhr   = rhrVal   ? parseInt(rhrVal)   : null;
   const maxHR = maxHRVal ? parseInt(maxHRVal) : null;
 
-  if (!age || age < 15 || age > 80) { document.getElementById('age').focus(); return; }
+  if (!age || age < 15 || age > 80) {
+    trackEvent('calculate_zone2_validation_error', { field: 'age' });
+    document.getElementById('age').focus();
+    return;
+  }
 
   const formulas  = computeFormulas(age, rhr, maxHR);
   const consensus = computeConsensus(formulas);
@@ -1456,6 +1500,14 @@ function calculate() {
   const featured = formulas.find(x => x.featured);
   const bestNote = featured ? getBestForYouExplanation(featured.id, rhr, maxHR) : '';
   renderChart(formulas, consensus, scale, bestNote);
+  trackEvent('calculate_zone2', {
+    fitness_level: fitnessLevel,
+    has_resting_hr: rhr !== null,
+    has_max_hr: maxHR !== null,
+    featured_formula: featured ? featured.id : 'none',
+    consensus_low: consensus.low,
+    consensus_high: consensus.high
+  });
 
   // Chips
   document.getElementById('chips').innerHTML = [
@@ -1478,6 +1530,7 @@ function backToForm() {
   document.getElementById('results').classList.remove('visible');
   document.getElementById('form-card').classList.remove('hidden');
   requestAnimationFrame(() => scrollToCalculateSectionHead());
+  trackEvent('back_to_inputs');
 }
 
 /* ════════════════════════════════════════════
@@ -1549,8 +1602,32 @@ window.addEventListener('DOMContentLoaded', () => {
     heroCalc.addEventListener('click', (e) => {
       e.preventDefault();
       scrollToCalculateSectionHead();
+      trackEvent('hero_cta_click', { destination: 'calculate' });
     });
   }
+
+  document.querySelectorAll('.steps-inner .step').forEach(step => {
+    step.addEventListener('click', () => {
+      const labelEl = step.querySelector('.step-label');
+      const destination = step.getAttribute('href') || '';
+      trackEvent('step_navigation_click', {
+        step_label: labelEl ? labelEl.textContent.trim().toLowerCase() : 'unknown',
+        destination: destination.replace('#', '')
+      });
+    });
+  });
+
+  document.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', () => {
+      const href = link.getAttribute('href') || '';
+      const isExternal = /^https?:\/\//i.test(href);
+      if (!isExternal) return;
+      trackEvent('outbound_link_click', {
+        link_url: href,
+        link_text: (link.textContent || '').trim().slice(0, 80)
+      });
+    });
+  });
 
   sectionOrder.forEach(id => {
     const el = document.getElementById(id);
@@ -1572,6 +1649,7 @@ function setHasStrap(hasOne) {
   document.getElementById('tips-card').classList.toggle('visible',  hasOne);
   document.getElementById('product-grid').classList.toggle('visible', !hasOne);
   document.getElementById('aff-note').style.display = hasOne ? 'none' : '';
+  trackEvent('strap_toggle', { has_chest_strap: hasOne });
 
 }
 
