@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parse FIT/GPX | Zone 2 For You</title>
+  <meta name="description" content="Sandbox page for analyzing FIT and GPX files in-browser.">
+  <style>
+    :root {
+      --bg: #161620;
+      --surface: #20202e;
+      --surface-raised: #2a2a3a;
+      --border: #38384a;
+      --text-primary: #f0ebe2;
+      --text-secondary: #9a95a0;
+      --accent: #00b4d8;
+      --accent-hover: #0096b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 10px;
+    }
+
+    .sub {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      text-align: center;
+      background: var(--surface-raised);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--accent);
+      background: rgba(0, 180, 216, 0.09);
+    }
+
+    .dropzone p {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .picker-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    select {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #12121c;
+      color: var(--text-primary);
+      min-width: 260px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #111;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .pill-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    pre {
+      background: #12121c;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 0.86rem;
+      color: #c4f4ff;
+      max-height: 360px;
+    }
+
+    .hint {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .images-card {
+      display: none;
+    }
+
+    .images-card.visible {
+      display: block;
+    }
+
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .img-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #12121c;
+    }
+
+    .img-item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      background: #0f0f16;
+    }
+
+    .img-caption {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>FIT / GPX Parse Sandbox</h1>
+    <p class="sub">Upload a file to inspect metadata and start building your analysis flow.</p>
+
+    <section class="card">
+      <div class="dropzone" id="dropzone">
+        <p>Drop a <strong>.fit</strong> or <strong>.gpx</strong> file here</p>
+        <div class="picker-row">
+          <select id="repo-file-select" aria-label="Choose a file from GPX directory">
+            <option value="">Select a file from /GPX</option>
+          </select>
+        </div>
+        <button type="button" id="pick-file-btn">Or choose local file</button>
+        <input id="file-input" type="file" accept=".fit,.gpx,application/gpx+xml,application/octet-stream" hidden>
+      </div>
+      <div id="file-meta" class="meta-grid" aria-live="polite"></div>
+      <p class="hint">
+        GPX analysis lives in <code>GPX/gpx-analyze.js</code> and <code>GPX/activity-format.js</code>. FIT uses the in-page loader (dynamic import).
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-bottom:12px;">Debug Output</h2>
+      <pre id="debug-output">No file loaded yet.</pre>
+    </section>
+
+    <section class="card images-card" id="images-card">
+      <h2 style="margin-bottom:12px;">Images</h2>
+      <p class="hint" id="images-note" style="margin-top:0;margin-bottom:12px;"></p>
+      <div class="images-grid" id="images-grid"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { analyzeGpxString, isLikelyGpxText } from "./GPX/gpx-analyze.js";
+    import {
+      toPrettyBytes,
+      fmtDuration,
+      fmtKm,
+      fmtMi,
+      fmtPace,
+      fmtSpeedKph,
+      fmtSpeedFromMs
+    } from "./GPX/activity-format.js";
+
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("file-input");
+    const pickFileBtn = document.getElementById("pick-file-btn");
+    const repoFileSelect = document.getElementById("repo-file-select");
+    const debugOutput = document.getElementById("debug-output");
+    const fileMeta = document.getElementById("file-meta");
+    const imagesCard = document.getElementById("images-card");
+    const imagesNote = document.getElementById("images-note");
+    const imagesGrid = document.getElementById("images-grid");
+    let fitParserCtorPromise = null;
+    const fallbackRepoFiles = [
+      "Apple_Fitness_Cycling.fit",
+      "Apple_Fitness_Strength.fit",
+      "Indoor_Cycling_Zone_2.fit",
+      "Outdoor_Cycling.fit",
+      "Outdoor_Cycling.gpx",
+      "Outdoor_Walk.fit",
+      "Outdoor_Walk.gpx"
+    ];
+
+    pickFileBtn.addEventListener("click", () => fileInput.click());
+    repoFileSelect.addEventListener("change", () => {
+      void loadSelectedRepoFile();
+    });
+    fileInput.addEventListener("change", (event) => {
+      const [file] = event.target.files || [];
+      if (file) handleFile(file);
+    });
+    void bootstrapRepoFileSelect();
+
+    ["dragenter", "dragover"].forEach((evt) => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add("dragover");
+      });
+    });
+
+    ["dragleave", "drop"].forEach((evt) => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove("dragover");
+      });
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      const [file] = e.dataTransfer.files || [];
+      if (file) handleFile(file);
+    });
+
+    function setMeta(items) {
+      fileMeta.innerHTML = items
+        .map(
+          (item) => `
+          <div class="pill">
+            <div class="pill-label">${item.label}</div>
+            <div>${item.value}</div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    function coerceDate(value) {
+      if (!value) return null;
+      if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function getAverage(nums) {
+      if (!nums || nums.length === 0) return null;
+      return nums.reduce((a, b) => a + b, 0) / nums.length;
+    }
+
+    function renderImages(images, note) {
+      if (!images || images.length === 0) {
+        imagesCard.classList.remove("visible");
+        imagesGrid.innerHTML = "";
+        imagesNote.textContent = "";
+        return;
+      }
+      imagesCard.classList.add("visible");
+      imagesNote.textContent = note;
+      imagesGrid.innerHTML = images
+        .map(
+          (img, idx) => `
+            <div class="img-item">
+              <img src="${img.src}" alt="Embedded activity image ${idx + 1}" loading="lazy">
+              <div class="img-caption">${img.label}</div>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    async function getFitParserCtor() {
+      if (!fitParserCtorPromise) {
+        fitParserCtorPromise = import("https://esm.sh/fit-file-parser@2.3.3")
+          .then((mod) => mod.default || mod.FitParser || mod)
+          .catch((error) => {
+            fitParserCtorPromise = null;
+            throw error;
+          });
+      }
+      return fitParserCtorPromise;
+    }
+
+    async function detectFileType(file) {
+      const byExtension = file.name.toLowerCase().split(".").pop();
+      if (byExtension === "gpx") return "gpx";
+      if (byExtension === "fit") return "fit";
+
+      const textSample = await file.slice(0, 1024).text();
+      if (isLikelyGpxText(textSample)) return "gpx";
+
+      const bytes = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+      if (bytes.length >= 12) {
+        const signature = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
+        if (signature === ".FIT") return "fit";
+      }
+
+      return "unknown";
+    }
+
+    async function bootstrapRepoFileSelect() {
+      let repoFiles = [];
+      try {
+        const response = await fetch("GPX/files.json");
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        const manifestFiles = Array.isArray(payload?.files) ? payload.files : [];
+        repoFiles = manifestFiles.filter((name) => /\.(gpx|fit)$/i.test(name));
+      } catch (_) {
+        repoFiles = fallbackRepoFiles.slice();
+      }
+
+      repoFiles
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((name) => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          repoFileSelect.appendChild(option);
+        });
+    }
+
+    async function loadSelectedRepoFile() {
+      const selected = repoFileSelect.value;
+      if (!selected) {
+        debugOutput.textContent = "Choose a file from the dropdown first.";
+        return;
+      }
+
+      try {
+        const response = await fetch(`GPX/${selected}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const file = new File([blob], selected, {
+          type: blob.type || "application/octet-stream",
+          lastModified: Date.now()
+        });
+
+        await handleFile(file);
+      } catch (error) {
+        debugOutput.textContent = `Failed to load /GPX/${selected}: ${error instanceof Error ? error.message : String(error)}`;
+      }
+    }
+
+    async function handleFile(file) {
+      const detectedType = await detectFileType(file);
+      renderImages([], "");
+      setMeta([
+        { label: "File name", value: file.name },
+        { label: "Detected type", value: detectedType },
+        { label: "Size", value: toPrettyBytes(file.size) },
+        { label: "Modified", value: new Date(file.lastModified).toLocaleString() }
+      ]);
+
+      if (detectedType === "gpx") {
+        await parseGpx(file);
+        return;
+      }
+
+      if (detectedType === "fit") {
+        await parseFitStub(file);
+        return;
+      }
+
+      debugOutput.textContent = "Unsupported file type. Please use .fit or .gpx.";
+    }
+
+    async function parseGpx(file) {
+      try {
+        const text = await file.text();
+        const out = analyzeGpxString(text, { baseUrl: window.location.href });
+        if (!out.ok) {
+          debugOutput.textContent = out.error;
+          return;
+        }
+        const r = out.result;
+        const gpxImages = r.gpxImages;
+        const {
+          activityName,
+          activityType,
+          totalSeconds,
+          distanceMeters,
+          elevationGain,
+          elevationLoss,
+          avgHr,
+          maxHr,
+          avgCad,
+          avgPower,
+          avgTemp,
+          totalCalories,
+          pacePerKm,
+          trackPointCount,
+          routePointCount
+        } = r;
+
+        setMeta([
+          { label: "Activity", value: activityName },
+          { label: "Type", value: activityType },
+          { label: "Time spent", value: fmtDuration(totalSeconds) },
+          { label: "Distance", value: `${fmtKm(distanceMeters)} (${fmtMi(distanceMeters)})` },
+          { label: "Avg speed", value: fmtSpeedKph(distanceMeters, totalSeconds) },
+          { label: "Avg pace", value: fmtPace(pacePerKm) },
+          { label: "Average HR", value: avgHr !== null ? `${avgHr} bpm` : "n/a" },
+          { label: "Max HR", value: maxHr !== null ? `${maxHr} bpm` : "n/a" },
+          { label: "Calories", value: totalCalories !== null ? `${totalCalories} kcal` : "n/a" },
+          { label: "Elevation gain", value: `${Math.round(elevationGain)} m` },
+          { label: "Elevation loss", value: `${Math.round(elevationLoss)} m` },
+          { label: "Avg cadence", value: avgCad !== null ? `${avgCad} rpm` : "n/a" },
+          { label: "Avg power", value: avgPower !== null ? `${avgPower} W` : "n/a" },
+          { label: "Avg temperature", value: avgTemp !== null ? `${avgTemp} °C` : "n/a" },
+          { label: "Images found", value: String(gpxImages.length) },
+          { label: "Track points", value: String(trackPointCount) },
+          { label: "Route points", value: String(routePointCount) },
+          { label: "File size", value: toPrettyBytes(file.size) }
+        ]);
+        renderImages(
+          gpxImages,
+          gpxImages.length
+            ? "Detected image references in GPX attributes/extensions."
+            : "No image references found in this GPX."
+        );
+
+        debugOutput.textContent = JSON.stringify(out.debug, null, 2);
+      } catch (error) {
+        debugOutput.textContent = `Failed to parse GPX: ${error instanceof Error ? error.message : String(error)}`;
+      }
+    }
+
+    async function parseFitStub(file) {
+      try {
+        const FitParserCtor = await getFitParserCtor();
+
+        const buffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        if (bytes.length < 12) {
+          debugOutput.textContent = "FIT parse error: file is too small to contain a valid FIT header.";
+          return;
+        }
+
+        const parser = new FitParserCtor({
+          force: true,
+          speedUnit: "m/s",
+          lengthUnit: "m",
+          temperatureUnit: "celsius",
+          elapsedRecordField: true,
+          mode: "list"
+        });
+
+        const fit = await new Promise((resolve, reject) => {
+          parser.parse(buffer, (error, data) => {
+            if (error) {
+              reject(error);
+              return;
+            }
+            resolve(data || {});
+          });
+        });
+
+        const sessions = Array.isArray(fit.sessions) ? fit.sessions : [];
+        const records = Array.isArray(fit.records) ? fit.records : [];
+        const laps = Array.isArray(fit.laps) ? fit.laps : [];
+        const session = sessions[0] || {};
+
+        const sport = session.sport || fit.activity?.sport || "unknown";
+        const subSport = session.sub_sport || null;
+        const startDate = coerceDate(session.start_time || fit.activity?.timestamp);
+        const totalSeconds = Number.isFinite(session.total_elapsed_time)
+          ? session.total_elapsed_time
+          : Number.isFinite(session.total_timer_time)
+            ? session.total_timer_time
+            : null;
+        const distanceMeters = Number.isFinite(session.total_distance)
+          ? session.total_distance
+          : null;
+
+        const hrFromRecords = records
+          .map((r) => r.heart_rate)
+          .filter((x) => Number.isFinite(x));
+        const avgHr = Number.isFinite(session.avg_heart_rate)
+          ? session.avg_heart_rate
+          : getAverage(hrFromRecords);
+        const maxHr = Number.isFinite(session.max_heart_rate)
+          ? session.max_heart_rate
+          : (hrFromRecords.length ? Math.max(...hrFromRecords) : null);
+
+        const speedFromRecords = records
+          .map((r) => r.speed)
+          .filter((x) => Number.isFinite(x));
+        const avgSpeedMs = Number.isFinite(session.avg_speed)
+          ? session.avg_speed
+          : getAverage(speedFromRecords);
+        const maxSpeedMs = Number.isFinite(session.max_speed)
+          ? session.max_speed
+          : (speedFromRecords.length ? Math.max(...speedFromRecords) : null);
+
+        const cadenceFromRecords = records
+          .map((r) => r.cadence)
+          .filter((x) => Number.isFinite(x));
+        const avgCadence = Number.isFinite(session.avg_cadence)
+          ? session.avg_cadence
+          : getAverage(cadenceFromRecords);
+        const maxCadence = Number.isFinite(session.max_cadence)
+          ? session.max_cadence
+          : (cadenceFromRecords.length ? Math.max(...cadenceFromRecords) : null);
+
+        const powerFromRecords = records
+          .map((r) => r.power)
+          .filter((x) => Number.isFinite(x));
+        const avgPower = Number.isFinite(session.avg_power)
+          ? session.avg_power
+          : getAverage(powerFromRecords);
+        const maxPower = Number.isFinite(session.max_power)
+          ? session.max_power
+          : (powerFromRecords.length ? Math.max(...powerFromRecords) : null);
+
+        const temps = records.map((r) => r.temperature).filter((x) => Number.isFinite(x));
+        const avgTemp = getAverage(temps);
+
+        const calories = Number.isFinite(session.total_calories) ? session.total_calories : null;
+        const ascent = Number.isFinite(session.total_ascent) ? session.total_ascent : null;
+        const descent = Number.isFinite(session.total_descent) ? session.total_descent : null;
+        const pacePerKm = Number.isFinite(avgSpeedMs) && avgSpeedMs > 0 ? 1000 / avgSpeedMs : NaN;
+        const activityType = subSport ? `${sport} (${subSport})` : sport;
+
+        setMeta([
+          { label: "Activity", value: file.name },
+          { label: "Type", value: activityType },
+          { label: "Start time", value: startDate ? startDate.toLocaleString() : "n/a" },
+          { label: "Time spent", value: Number.isFinite(totalSeconds) ? fmtDuration(totalSeconds) : "n/a" },
+          { label: "Distance", value: Number.isFinite(distanceMeters) ? `${fmtKm(distanceMeters)} (${fmtMi(distanceMeters)})` : "n/a" },
+          { label: "Avg speed", value: fmtSpeedFromMs(avgSpeedMs) },
+          { label: "Max speed", value: fmtSpeedFromMs(maxSpeedMs) },
+          { label: "Avg pace", value: fmtPace(pacePerKm) },
+          { label: "Average HR", value: Number.isFinite(avgHr) ? `${Math.round(avgHr)} bpm` : "n/a" },
+          { label: "Max HR", value: Number.isFinite(maxHr) ? `${Math.round(maxHr)} bpm` : "n/a" },
+          { label: "Calories", value: Number.isFinite(calories) ? `${Math.round(calories)} kcal` : "n/a" },
+          { label: "Elevation gain", value: Number.isFinite(ascent) ? `${Math.round(ascent)} m` : "n/a" },
+          { label: "Elevation loss", value: Number.isFinite(descent) ? `${Math.round(descent)} m` : "n/a" },
+          { label: "Avg cadence", value: Number.isFinite(avgCadence) ? `${Math.round(avgCadence)} rpm` : "n/a" },
+          { label: "Max cadence", value: Number.isFinite(maxCadence) ? `${Math.round(maxCadence)} rpm` : "n/a" },
+          { label: "Avg power", value: Number.isFinite(avgPower) ? `${Math.round(avgPower)} W` : "n/a" },
+          { label: "Max power", value: Number.isFinite(maxPower) ? `${Math.round(maxPower)} W` : "n/a" },
+          { label: "Avg temperature", value: Number.isFinite(avgTemp) ? `${avgTemp.toFixed(1)} °C` : "n/a" },
+          { label: "Images found", value: "0" },
+          { label: "Records", value: String(records.length) },
+          { label: "Laps", value: String(laps.length) }
+        ]);
+        renderImages([], "FIT files usually do not embed images directly.");
+
+        debugOutput.textContent = JSON.stringify(
+          {
+            status: "ok",
+            format: "fit",
+            sport,
+            subSport,
+            startTime: startDate ? startDate.toISOString() : null,
+            totalDurationSeconds: Number.isFinite(totalSeconds) ? Math.round(totalSeconds) : null,
+            distanceMeters: Number.isFinite(distanceMeters) ? Math.round(distanceMeters) : null,
+            averageSpeedKph: Number.isFinite(avgSpeedMs) ? Number((avgSpeedMs * 3.6).toFixed(2)) : null,
+            maxSpeedKph: Number.isFinite(maxSpeedMs) ? Number((maxSpeedMs * 3.6).toFixed(2)) : null,
+            averagePaceSecondsPerKm: Number.isFinite(pacePerKm) ? Math.round(pacePerKm) : null,
+            averageHeartRate: Number.isFinite(avgHr) ? Math.round(avgHr) : null,
+            maxHeartRate: Number.isFinite(maxHr) ? Math.round(maxHr) : null,
+            calories: Number.isFinite(calories) ? Math.round(calories) : null,
+            elevationGainMeters: Number.isFinite(ascent) ? Math.round(ascent) : null,
+            elevationLossMeters: Number.isFinite(descent) ? Math.round(descent) : null,
+            averageCadence: Number.isFinite(avgCadence) ? Math.round(avgCadence) : null,
+            maxCadence: Number.isFinite(maxCadence) ? Math.round(maxCadence) : null,
+            averagePowerWatts: Number.isFinite(avgPower) ? Math.round(avgPower) : null,
+            maxPowerWatts: Number.isFinite(maxPower) ? Math.round(maxPower) : null,
+            averageTemperatureC: Number.isFinite(avgTemp) ? Number(avgTemp.toFixed(1)) : null,
+            lapCount: laps.length,
+            recordCount: records.length
+          },
+          null,
+          2
+        );
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : String(error);
+        debugOutput.textContent = `Failed to inspect FIT file: ${msg}`;
+      }
+    }
+  </script>
+</body>
+</html>
