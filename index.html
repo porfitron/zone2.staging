@@ -11,7 +11,7 @@
     })();
   </script>
   <title>Zone 2 For You | Heart rate calculator for your Zone 2 range</title>
-  <meta name="description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, and 220 minus age in one place. Get a clear range from the inputs you trust. Not medical advice.">
+  <meta name="description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, Tanaka, and 220 minus age in one place. Get a clear range from the inputs you trust. Not medical advice.">
   <link rel="canonical" href="https://zone2foryou.com/">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#161620">
@@ -27,7 +27,7 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://zone2foryou.com/">
   <meta property="og:title" content="Zone 2 For You: Your Zone 2 heart rate range, clear and ready to use">
-  <meta property="og:description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, and 220 minus age. Get one clear range without reconciling conflicting formulas.">
+  <meta property="og:description" content="Free Zone 2 heart rate calculator. Compare Karvonen, Maffetone, percent of max HR, Tanaka, and 220 minus age. Get one clear range without reconciling conflicting formulas.">
   <meta property="og:image" content="https://zone2foryou.com/images/og-image-1200x630.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -61,7 +61,7 @@
     "@type": "WebSite",
     "name": "Zone 2 For You",
     "url": "https://zone2foryou.com/",
-    "description": "Zone 2 heart rate calculator comparing Karvonen, Maffetone, percent of max HR, and 220 minus age.",
+    "description": "Zone 2 heart rate calculator comparing Karvonen, Maffetone, percent of max HR, Tanaka, and 220 minus age.",
     "publisher": {
       "@type": "Organization",
       "name": "Hatch and Scale LLC",
@@ -83,613 +83,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..900&display=swap" rel="stylesheet">
-  <style>
-    /* ═══ Tokens: Brand/briefs/z24u-color-system + z24u-typography ═══ */
-    :root {
-      --z1-fill: #7DCCDA;
-      --z2-fill: #00B4D8;
-      --z3-fill: #F9C623;
-      --z4-fill: #F97316;
-      --z5-fill: #E91E8C;
-      --zone-1: var(--z1-fill);
-      --zone-2: var(--z2-fill);
-      --zone-3: var(--z3-fill);
-      --zone-4: var(--z4-fill);
-      --zone-5: var(--z5-fill);
-      --text-on-fill: #1C1814;
-
-      --bg: #161620;
-      --surface: #20202E;
-      --surface-raised: #2A2A3A;
-      --surface-inset: #12121C;
-      --border: #38384A;
-      --border-subtle: #28283A;
-      --text-primary: #F0EBE2;
-      --text-secondary: #9A95A0;
-      --text-tertiary: #5A556A;
-
-      --accent-primary: #00B4D8;
-      --accent-primary-hover: #0096B8;
-      --accent-primary-text: #00B4D8;
-      --accent-primary-light: #B8EEFF;
-      --accent-tint: rgba(0, 180, 216, 0.11);
-      --accent-border: rgba(0, 180, 216, 0.32);
-      --accent-glow: rgba(0, 180, 216, 0.22);
-      --accent-consensus-bg: rgba(0, 180, 216, 0.055);
-
-      --text-display: 40px;
-      --text-heading-1: 28px;
-      --text-heading-2: 22px;
-      --text-heading-3: 18px;
-      --text-body: 16px;
-      --text-label: 14px;
-      --text-small: 12px;
-      --text-micro: 11px;
-
-      --nav-height: 69px;
-      --zstrip-h: 4px;
-      --steps-bar-height: 68px;
-      --site-header-h: calc(var(--nav-height) + var(--zstrip-h) + var(--steps-bar-height));
-      --chart-meta-w: 148px;
-
-      /* Legacy aliases (existing rules) */
-      --t1: var(--text-primary);
-      --t2: var(--text-secondary);
-      --t3: var(--text-tertiary);
-      --ac: var(--accent-primary);
-      --ac-h: var(--accent-primary-hover);
-      --surface-r: var(--surface-raised);
-      --surface-i: var(--surface-inset);
-      --bs: var(--border-subtle);
-      --bm: var(--border);
-      --ac-d: var(--accent-tint);
-      --ac-b: var(--accent-border);
-      --ac-g: var(--accent-glow);
-      --ac-col: var(--accent-consensus-bg);
-      --ac-cb: var(--accent-border);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{
-      scroll-behavior:smooth;
-      scroll-padding-top:calc(var(--site-header-h) + 12px);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-    }
-    body{
-      font-family:'Inter',system-ui,sans-serif;
-      font-size:var(--text-body);
-      line-height:1.5;
-      background:var(--bg);
-      color:var(--text-primary);
-      -webkit-font-smoothing:antialiased;
-    }
-    :focus-visible{
-      outline:2px solid var(--accent-primary);
-      outline-offset:2px;
-    }
-    a:focus-visible, button:focus-visible{outline-offset:3px}
-
-    /* ═══ Sticky site header (nav + zone strip + steps) ═══ */
-    .site-header{
-      position:sticky;top:0;z-index:100;
-      background:var(--bg);
-    }
-    /* ═══ Zone strip ═══ */
-    .zstrip{display:flex;height:var(--zstrip-h);flex-shrink:0}
-    .zstrip div{flex:1}
-
-    /* ═══ Nav ═══ */
-    nav{
-      display:flex;align-items:center;justify-content:center;
-      min-height:var(--nav-height);
-      padding:14px 24px;border-bottom:1px solid var(--border-subtle);
-      background:rgba(22,22,32,.93);
-      backdrop-filter:blur(12px);
-    }
-    .nav-logo{height:40px;width:auto;display:block}
-
-    /* ═══ Steps bar ═══ */
-    .steps-bar{
-      border-bottom:1px solid var(--border-subtle);
-      background:rgba(22,22,32,.95);
-      backdrop-filter:blur(12px);
-    }
-    .steps-inner{
-      max-width:560px;margin:0 auto;
-      padding:14px 24px;
-      display:grid;
-      grid-template-columns:1fr auto 1fr auto 1fr;
-      align-items:start;
-    }
-    .step{
-      display:flex;flex-direction:column;align-items:center;gap:5px;
-      text-decoration:none;justify-self:center;width:100%;
-      max-width:120px;
-    }
-    .step-circle{
-      width:26px;height:26px;border-radius:50%;
-      background:var(--surface-r);border:1.5px solid var(--bm);
-      display:flex;align-items:center;justify-content:center;
-      transition:all .25s;
-    }
-    .step-icon{font-size:var(--text-micro);font-weight:700;color:var(--accent-primary);font-variant-numeric:tabular-nums;letter-spacing:.02em;transition:color .25s}
-    .step-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);white-space:nowrap;transition:color .25s}
-    /* Current */
-    .step--current .step-circle{border-color:var(--ac);background:var(--ac-d)}
-    .step--current .step-label{color:var(--t1)}
-    /* Done */
-    .step--done .step-circle{background:var(--accent-primary);border-color:var(--accent-primary)}
-    .step--done .step-icon{color:var(--text-on-fill)}
-    .step--done .step-label{color:var(--t2)}
-    /* Connector */
-    .step-conn{
-      height:1px;background:var(--bs);
-      margin-top:12px;min-width:6px;align-self:center;
-      transition:background .3s;
-    }
-    .step-conn--done{background:rgba(0,180,216,.35)}
-
-    /* ═══ Hero ═══ */
-    .hero{padding:clamp(40px,8vw,64px) 24px 48px;text-align:center;max-width:600px;margin:0 auto;scroll-margin-top:var(--site-header-h)}
-    .hero-eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:var(--text-micro);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-primary);margin-bottom:18px;
-    }
-    .hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--accent-primary);opacity:.5}
-    h1{
-      font-size:clamp(26px,5vw,var(--text-display));
-      font-weight:800;
-      line-height:1.1;
-      letter-spacing:-.02em;
-      color:var(--text-primary);
-      margin-bottom:16px;
-    }
-    @media (min-width: 480px) {
-      h1 { letter-spacing: -0.03em; }
-    }
-    .hero-sub{font-size:clamp(14px,2.5vw,var(--text-body));font-weight:400;color:var(--text-secondary);line-height:1.65;margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto}
-    .hero-cta{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--accent-primary);color:var(--text-on-fill);
-      font-family:inherit;font-size:15px;font-weight:600;
-      padding:15px 26px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
-      min-height:44px;
-    }
-    .hero-cta:hover{background:var(--accent-primary-hover)}
-
-    /* ═══ Section wrapper ═══ */
-    .section{max-width:560px;margin:0 auto;padding:0 24px clamp(56px,10vw,80px);scroll-margin-top:calc(var(--site-header-h) + 8px)}
-    .section-header{
-      display:flex;align-items:center;gap:12px;
-      margin-bottom:28px;padding-top:52px;border-top:1px solid var(--border-subtle);
-    }
-    .section-num{
-      font-size:var(--text-micro);font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums;
-      color:var(--text-on-fill);background:var(--accent-primary);
-      width:24px;height:24px;border-radius:6px;
-      display:inline-flex;align-items:center;justify-content:center;
-      flex-shrink:0;
-    }
-    .section-title{font-size:var(--text-heading-2);font-weight:700;letter-spacing:-.01em;color:var(--text-primary)}
-    .section-soon{
-      font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-      color:var(--text-tertiary);background:var(--surface-r);
-      border:1px solid var(--bs);border-radius:100px;padding:4px 10px;
-      display:inline-block;margin:-4px 0 18px;
-    }
-    .section-intro{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.55;margin:-12px 0 22px;max-width:42em}
-    .sep{height:1px;background:var(--bs)}
-
-    /* ═══ Form card ═══ */
-    .form-card{
-      background:var(--surface);border:1px solid var(--bs);
-      border-radius:20px;padding:24px;margin-bottom:20px;
-    }
-    .form-card.hidden{display:none}
-    .form-card h2{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:22px}
-    .fields{display:flex;flex-direction:column;gap:18px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .field-header{display:flex;align-items:center;justify-content:space-between}
-    .field-label{font-size:var(--text-micro);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary)}
-    .field-opt{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ac);background:var(--ac-d);padding:2px 7px;border-radius:100px}
-    .input-row{
-      display:flex;align-items:center;
-      background:var(--surface-r);border:1px solid var(--bm);
-      border-radius:10px;overflow:hidden;transition:border-color .15s;
-    }
-    .input-row:focus-within{border-color:var(--ac)}
-    .field-input{
-      flex:1;background:transparent;border:none;outline:none;
-      font-family:inherit;font-size:20px;font-weight:600;
-      font-variant-numeric:tabular-nums lining-nums;color:var(--t1);
-      padding:11px 14px;min-width:0;
-    }
-    .field-input::placeholder{color:var(--t3);font-weight:400}
-    .field-unit{font-size:13px;font-weight:500;color:var(--t3);padding:0 14px 0 0;white-space:nowrap}
-    .field-hint{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);line-height:1.5}
-    .form-actions{margin-top:24px}
-    .btn-calc{
-      width:100%;background:var(--accent-primary);color:var(--text-on-fill);border:none;
-      border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;
-      padding:15px;cursor:pointer;margin-bottom:10px;
-      min-height:48px;
-    }
-    .btn-calc:hover{background:var(--accent-primary-hover)}
-    .privacy-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);text-align:center}
-
-    /* ═══ Results card ═══ */
-    #results{display:none}
-    #results.visible{display:block}
-    .results-card{background:var(--surface);border:1px solid var(--bs);border-radius:22px;overflow:hidden}
-
-    .results-hd{padding:20px 24px 14px;border-bottom:1px solid var(--bs)}
-    .results-hd h2{font-size:var(--text-heading-2);font-weight:800;letter-spacing:-.02em;color:var(--text-primary);margin-bottom:4px}
-    .results-hd p{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary)}
-    .inputs-header{padding:14px 24px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .inputs-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-right:2px}
-    .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{font-size:11px;font-weight:500;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);padding:4px 10px;border-radius:100px}
-    .change-inputs{font-size:11px;font-weight:600;color:var(--ac);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;margin-left:4px}
-    .change-inputs:hover{color:var(--ac-h)}
-
-    /* Breakdown: shared chart column via subgrid when supported */
-    .breakdown{padding:16px 24px 0}
-    .breakdown-hd{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
-    .chart-layout{display:block}
-    .chart-corner{display:none}
-    .axis-row{display:flex;height:20px;margin-left:var(--chart-meta-w);position:relative;margin-bottom:2px}
-    .rows-wrap{display:block;position:relative}
-    @media (max-width:420px){
-      :root{--chart-meta-w:118px}
-      .meta{flex:0 0 118px;padding-right:8px}
-      .fn{font-size:12px}
-    }
-    @supports (grid-template-columns:subgrid){
-      .chart-layout{
-        display:grid;
-        grid-template-columns:var(--chart-meta-w) minmax(0,1fr);
-        align-items:stretch;
-      }
-      .chart-corner{
-        display:block;
-        grid-column:1;
-        grid-row:1;
-        min-height:1px;
-      }
-      .axis-row{
-        grid-column:2;
-        grid-row:1;
-        margin-left:0;
-        align-self:end;
-      }
-      .rows-wrap{display:contents;position:static}
-    }
-    .axis-inner{position:absolute;inset:0}
-    .axis-tick{
-      position:absolute;bottom:3px;
-      font-size:var(--text-micro);font-weight:300;font-variant-numeric:tabular-nums;color:var(--text-tertiary);
-      transform:translateX(-50%);white-space:nowrap;
-    }
-    .axis-tick:first-child{transform:translateX(0)}
-    .axis-tick:last-child{transform:translateX(-100%)}
-
-    .row{
-      display:flex;align-items:center;border-top:1px solid var(--bs);min-height:56px;
-    }
-    @supports (grid-template-columns:subgrid){
-      .row{
-        display:grid;
-        grid-template-columns:subgrid;
-        grid-column:1 / -1;
-        align-items:center;
-      }
-    }
-    .row.locked{opacity:.4}
-    .meta{flex:0 0 var(--chart-meta-w);padding:10px 14px 10px 0}
-    .fn{font-size:13px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:4px}
-    .meta .tag-best{margin-bottom:6px}
-    .row.featured .fn{color:var(--accent-primary)}
-    .tag{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:6px}
-    .tag-best{background:var(--ac-d);color:var(--ac)}
-    /* One details block full width of .meta: avoids a flex-sized details collapsing the body to the ? width. */
-    .best-wrap{margin-bottom:6px;width:100%;min-width:0}
-    .best-coach{width:100%;min-width:0}
-    .best-coach-summary{
-      list-style:none;cursor:pointer;padding:0;margin:0;
-      display:flex;flex-direction:row;align-items:center;gap:8px;
-      width:100%;
-    }
-    .best-coach-summary::-webkit-details-marker{display:none}
-    .best-coach-summary .tag-best{margin-bottom:0}
-    .best-coach-q{
-      box-sizing:border-box;
-      display:inline-flex;align-items:center;justify-content:center;
-      flex:0 0 auto;
-      /* Match .tag pill height: 10px font + 2px padding top/bottom + line box */
-      width:19px;height:19px;border-radius:50%;
-      font-size:11px;font-weight:700;line-height:1;color:var(--text-primary);
-      background:var(--accent-primary);
-      transition:background .15s ease;
-    }
-    .best-coach-summary:hover .best-coach-q{background:var(--accent-primary-hover)}
-    .best-coach-summary:focus-visible .best-coach-q{outline:2px solid var(--accent-primary);outline-offset:2px}
-    .best-coach-summary:focus-visible{outline:none}
-    .best-coach-body{
-      font-size:11px;font-weight:400;line-height:1.55;color:var(--text-secondary);
-      margin:8px 0 0;padding:10px 12px;background:var(--surface-i);border-radius:10px;
-      border:1px solid var(--bs);
-      width:100%;max-width:100%;min-width:0;box-sizing:border-box;
-    }
-    .fhint{font-size:11px;font-weight:400;color:var(--t3);display:block}
-
-    .ba{flex:1;position:relative;height:56px;min-width:0;overflow:visible}
-    .row:has(.b-slot.b-slot--below) .ba{padding-bottom:22px}
-    .row:has(.b-slot.b-slot--below){min-height:72px;align-items:flex-start}
-    .row:has(.b-slot.b-slot--below) .meta{padding-top:12px}
-    .consensus-col{position:absolute;top:0;bottom:0;background:var(--ac-col);border-left:1px solid var(--ac-cb);border-right:1px solid var(--ac-cb);z-index:0}
-    .gl{position:absolute;top:0;bottom:0;width:1px;background:var(--bs);z-index:1}
-    .bt{position:absolute;inset:0;z-index:2}
-    .b-slot{position:absolute;top:0;bottom:0}
-    .b-edge{
-      position:absolute;top:50%;transform:translateY(-50%);
-      font-size:11px;font-weight:700;font-variant-numeric:tabular-nums lining-nums;
-      color:var(--text-secondary);line-height:1;z-index:3;pointer-events:none;
-    }
-    .b-edge--lo{left:0;transform:translate(-100%,-50%);margin-right:12px;text-align:right}
-    .b-edge--hi{right:0;transform:translate(100%,-50%);margin-left:12px;text-align:left}
-    .row.featured .b-edge{color:var(--text-secondary)}
-    .b-visual{
-      position:absolute;left:8px;right:8px;top:50%;transform:translateY(-50%);
-      height:20px;border-radius:6px;
-      box-sizing:border-box;
-    }
-    .row.featured .b-visual{background:var(--accent-primary);box-shadow:0 0 20px var(--accent-glow)}
-    .row:not(.featured):not(.locked) .b-visual{
-      background:var(--surface-r);
-      border:1.5px solid var(--accent-primary);
-      box-shadow:none;
-    }
-    .b-value{
-      font-size:11px;font-weight:700;font-variant-numeric:tabular-nums lining-nums;
-      white-space:nowrap;line-height:1.2;pointer-events:none;
-    }
-    .b-value--inside{
-      position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .b-value--outside{
-      display:none;position:absolute;color:var(--text-secondary);
-    }
-    .b-slot.is-narrow .b-value--inside{visibility:hidden}
-    .b-slot--below .b-value--outside{
-      display:block;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;
-    }
-    .b-slot--left .b-value--outside{
-      display:block;right:100%;top:50%;transform:translateY(-50%);margin-right:8px;left:auto;
-    }
-    .b-slot--right .b-value--outside{
-      display:block;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;
-    }
-    .row.featured .b-value--inside{color:var(--text-on-fill);font-size:var(--text-small)}
-    .row.featured .b-value--outside{color:var(--text-secondary);font-size:var(--text-small)}
-    .row:not(.featured) .b-value--inside,.row:not(.featured) .b-value--outside{color:var(--text-secondary)}
-
-    /* Sweet spot */
-    .sweet-spot{
-      display:flex;align-items:center;
-      background:var(--surface-i);border-top:1px solid var(--ac-b);
-      margin:0 -24px;width:calc(100% + 48px);
-      min-height:80px;padding:14px 24px;
-    }
-    .ss-meta{
-      flex:0 0 var(--chart-meta-w);
-      padding:10px 14px 10px 0;
-    }
-    @supports (grid-template-columns:subgrid){
-      .sweet-spot{
-        display:grid;
-        grid-template-columns:subgrid;
-        grid-column:1 / -1;
-      }
-    }
-    .ss-eyebrow{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:5px}
-    .ss-nums{display:flex;align-items:center;margin-bottom:3px;line-height:1}
-    .ss-n{
-      font-size:clamp(28px,7vw,40px);
-      font-weight:900;
-      letter-spacing:-.03em;
-      font-variant-numeric:tabular-nums lining-nums;
-      color:var(--text-primary);
-    }
-    .ss-dash{
-      font-size:clamp(22px,5vw,28px);font-weight:500;color:var(--text-primary);
-      margin:0 6px;align-self:center;opacity:.95;
-    }
-    .ss-unit{font-size:12px;font-weight:400;color:var(--t2);margin-left:5px;align-self:flex-end;padding-bottom:2px}
-    .ss-hint{font-size:11px;font-weight:400;color:var(--t3);display:block}
-    .ss-ba{flex:1;position:relative;height:80px;min-width:0}
-    .ss-ba .bt{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%}
-    .ss-bar{
-      position:absolute;top:50%;margin-top:-14px;
-      height:28px;border-radius:8px;box-sizing:border-box;
-      background:var(--ac-d);border:1.5px solid var(--ac);
-      box-shadow:0 0 16px var(--ac-g),0 0 40px rgba(0,180,216,.09);z-index:2;
-    }
-    .ss-bpm{
-      position:absolute;top:50%;
-      font-size:13px;font-weight:800;font-variant-numeric:tabular-nums lining-nums;
-      color:var(--accent-primary);white-space:nowrap;z-index:3;
-      /* vertical center is handled by JS setting top:50% and this transform: */
-    }
-    .ss-bpm-l{transform:translateY(-50%) translateX(calc(-100% - 14px))}
-    .ss-bpm-r{transform:translateY(-50%) translateX(14px)}
-
-    /* Card CTA */
-    .card-cta{padding:16px 24px;border-top:1px solid var(--bs);display:flex;gap:10px}
-    .btn-share{flex:1;background:var(--accent-primary);color:var(--text-on-fill);border:none;border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
-    .btn-share:hover{background:var(--accent-primary-hover)}
-    .btn-recalc{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:12px;font-family:inherit;font-size:var(--text-label);font-weight:600;padding:13px 18px;cursor:pointer;white-space:nowrap;min-height:44px}
-    @media (max-width:479px){
-      .card-cta{flex-direction:column;align-items:stretch}
-      .btn-recalc{width:100%}
-    }
-
-    /* ═══ Measure ═══ */
-    .measure-intro h3{font-size:var(--text-heading-3);font-weight:700;color:var(--text-primary);margin-bottom:12px;letter-spacing:-.01em}
-    .measure-intro p{font-size:var(--text-body);font-weight:400;color:var(--text-secondary);line-height:1.7;margin-bottom:10px}
-    .measure-intro strong{color:var(--text-primary);font-weight:600}
-    .strap-q{font-size:var(--text-body);font-weight:700;color:var(--text-primary);margin:24px 0 12px}
-    .toggle-group{display:flex;gap:10px;margin-bottom:28px}
-    .toggle-group--experience{flex-direction:column;align-items:stretch}
-    @media (min-width:480px){
-      .toggle-group--experience{flex-direction:row;flex-wrap:nowrap}
-    }
-    .toggle-btn{
-      flex:1;background:var(--surface-raised);color:var(--text-secondary);
-      border:1px solid var(--border);border-radius:12px;
-      font-family:inherit;font-size:var(--text-label);font-weight:600;padding:14px 12px;cursor:pointer;
-      min-height:44px;line-height:1.25;
-    }
-    .toggle-btn.active{background:var(--accent-tint);color:var(--accent-primary);border-color:var(--accent-border)}
-    .tips-card{display:none;background:var(--surface);border:1px solid var(--bs);border-radius:16px;padding:22px}
-    .tips-card.visible{display:block}
-    .tips-card h4{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:12px}
-    .tips-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-    .tips-list li{font-size:14px;font-weight:400;color:var(--t2);line-height:1.5;padding-left:20px;position:relative}
-    .tips-list li::before{content:'→';position:absolute;left:0;color:var(--ac);font-size:12px}
-
-    /* Product grid */
-    .product-grid{display:none;flex-direction:column;gap:12px}
-    .product-grid.visible{display:flex}
-    @media(min-width:480px){.product-grid.visible{display:grid;grid-template-columns:repeat(3,1fr)}}
-    .product-card{background:var(--surface);border:1px solid var(--bs);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
-    .product-img{
-      background:var(--bg);height:120px;display:flex;align-items:center;justify-content:center;
-      border-bottom:1px solid var(--bs);padding:16px 14px;
-    }
-    .product-img--brand{
-      background:#000000;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .product-img--brand .product-brand-logo{
-      width:auto;height:auto;max-width:min(200px,92%);max-height:72px;
-      object-fit:contain;object-position:center;display:block;flex-shrink:0;
-    }
-    .product-body{padding:14px;display:flex;flex-direction:column;flex:1}
-    .product-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:100px;padding:2px 8px;margin-bottom:7px;align-self:flex-start}
-    .badge-pick{background:var(--ac-d);color:var(--ac)}
-    .badge-value{background:rgba(249,198,35,.12);color:var(--zone-3)}
-    .badge-premium{background:rgba(249,115,22,.14);color:var(--zone-4);border:1px solid rgba(249,115,22,.35)}
-    .product-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:5px}
-    .product-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5;margin-bottom:12px;flex:1}
-    .product-footer{
-      display:flex;flex-direction:column;align-items:stretch;gap:12px;
-      margin-top:auto;padding-top:4px;
-    }
-    .product-price{
-      display:inline-flex;align-items:flex-start;flex-wrap:nowrap;line-height:1;
-      font-variant-numeric:tabular-nums;letter-spacing:-.02em;
-    }
-    .product-price .price-main{
-      font-size:22px;font-weight:800;color:var(--t1);
-    }
-    .product-price .price-cents{
-      font-size:11px;font-weight:700;color:var(--t2);
-      line-height:1;margin-left:1px;padding-top:3px;
-    }
-    .btn-buy{
-      font-size:12px;font-weight:700;color:var(--ac);text-decoration:none;background:var(--ac-d);
-      border:1px solid var(--ac-b);border-radius:8px;padding:10px 12px;white-space:nowrap;
-      text-align:center;align-self:stretch;
-    }
-    .affiliate-note{font-size:11px;font-weight:400;color:var(--t3);margin-top:14px;line-height:1.5}
-
-    /* ═══ Train / Playlists ═══ */
-    .train-intro{font-size:15px;font-weight:400;color:var(--t2);line-height:1.7;margin-bottom:28px}
-    .activity-group{margin-bottom:32px}
-    .activity-header{
-      display:flex;align-items:center;gap:10px;margin-bottom:14px;
-      padding-bottom:10px;border-bottom:1px solid var(--bs);
-    }
-    .activity-icon{
-      width:28px;height:28px;border-radius:7px;background:var(--surface-r);
-      display:flex;align-items:center;justify-content:center;
-      font-size:14px;
-    }
-    .activity-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
-    .activity-count{font-size:11px;font-weight:500;color:var(--t3)}
-
-    .playlist-grid{display:flex;flex-direction:column;gap:10px}
-    @media(min-width:400px){.playlist-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}}
-
-    .pl-card{background:var(--surface);border:1px solid var(--bs);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .pl-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-    .pl-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3}
-    .pl-duration{font-size:11px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums;white-space:nowrap}
-    .pl-desc{font-size:12px;font-weight:400;color:var(--t2);line-height:1.5}
-    .pl-footer{display:flex;align-items:center;justify-content:space-between}
-    .btn-spotify{
-      font-size:11px;font-weight:700;color:#1DB954;
-      background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);
-      border-radius:8px;padding:5px 10px;text-decoration:none;white-space:nowrap;
-    }
-    .btn-soon{font-size:11px;font-weight:600;color:var(--t3);background:var(--surface-r);border:1px solid var(--bs);border-radius:8px;padding:5px 10px;white-space:nowrap;cursor:default}
-
-    .pl-coming-note{font-size:var(--text-small);font-weight:400;color:var(--text-tertiary);margin-top:4px}
-    .pl-spotify-inline{color:var(--accent-primary);text-decoration:none;font-weight:600}
-    .pl-spotify-inline:hover{color:var(--accent-primary-hover)}
-
-    .spotify-link{
-      display:inline-flex;align-items:center;gap:8px;margin-top:8px;
-      font-size:13px;font-weight:600;color:var(--ac);text-decoration:none;
-    }
-    .spotify-link:hover{color:var(--ac-h)}
-
-    /* ═══ Support / Tip ═══ */
-    .support-wrap{max-width:560px;margin:0 auto;padding:0 24px 48px}
-    .support-card{
-      background:var(--surface);border:1px solid var(--bs);border-radius:20px;
-      padding:28px 24px;text-align:center;
-    }
-    .support-icon{font-size:28px;margin-bottom:12px;display:block}
-    .support-card h3{font-size:17px;font-weight:800;letter-spacing:-.015em;color:var(--t1);margin-bottom:8px}
-    .support-card p{font-size:14px;font-weight:400;color:var(--t2);line-height:1.65;margin-bottom:20px;max-width:340px;margin-left:auto;margin-right:auto}
-    .btn-bmc{
-      display:inline-flex;align-items:center;gap:8px;
-      background:#FFDD00;color:#1a1a1a;
-      font-family:inherit;font-size:14px;font-weight:700;
-      padding:13px 22px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;
-    }
-    .btn-bmc:hover{background:#f0ce00}
-    .btn-bmc svg{flex-shrink:0}
-
-    /* ═══ Footer ═══ */
-    .prefooter-feedback{
-      text-align:center;margin:20px auto 0;padding:0 8px;
-      max-width:340px;width:100%;
-    }
-    .prefooter-feedback p{
-      font-size:15px;font-weight:500;color:var(--text-secondary);
-      line-height:1.3;white-space:nowrap;
-    }
-    @media (max-width:380px){
-      .prefooter-feedback p{font-size:12px;letter-spacing:-0.02em}
-    }
-    .prefooter-feedback a{color:var(--accent-primary);font-weight:600;text-decoration:none}
-    .prefooter-feedback a:hover{color:var(--accent-primary-hover);text-decoration:underline}
-    footer{border-top:1px solid var(--bs);padding:28px 24px;text-align:center;max-width:560px;margin:0 auto}
-    .footer-copy{font-size:12px;font-weight:400;color:var(--t3);line-height:1.6}
-    .footer-disc{font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5;opacity:.7}
-  </style>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
 
 <header class="site-header">
 <!-- ══ Nav ══ -->
 <nav>
-  <!-- Logo: Prototypes/images/z24u-logo_dark.png (relative to this HTML file) -->
-  <img class="nav-logo" src="images/z24u-logo_dark.png" alt="Zone 2 For You">
+  <!-- Logo: Dev/images/z24u-logo_dark.png (relative to this HTML file) -->
+  <a href="index.html" aria-label="Zone 2 For You home"><img class="nav-logo" src="images/z24u-logo_dark.png" alt="Zone 2 For You"></a>
 </nav>
 
 <!-- ══ Zone strip ══ -->
@@ -702,17 +104,17 @@
 <!-- ══ Step progress bar ══ -->
 <div class="steps-bar">
   <div class="steps-inner">
-    <a class="step step--current" id="step-1" href="#calculate">
+    <a class="step step--current" id="step-1" href="index.html#calculate">
       <div class="step-circle"><span class="step-icon">01</span></div>
       <span class="step-label">Calculate</span>
     </a>
-    <div class="step-conn" id="conn-1-2"></div>
-    <a class="step" id="step-2" href="#measure">
+    <div class="step-conn" id="conn-1-2" aria-hidden="true"></div>
+    <a class="step" id="step-2" href="talk-test.html">
       <div class="step-circle"><span class="step-icon">02</span></div>
       <span class="step-label">Measure</span>
     </a>
-    <div class="step-conn" id="conn-2-3"></div>
-    <a class="step" id="step-3" href="#train">
+    <div class="step-conn" id="conn-2-3" aria-hidden="true"></div>
+    <a class="step" id="step-3" href="train.html">
       <div class="step-circle"><span class="step-icon">03</span></div>
       <span class="step-label">Train</span>
     </a>
@@ -731,6 +133,7 @@
       <path d="M7.5 2.5v7M4 9.5l3.5 3 3.5-3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </a>
+  <p class="hero-links"><a href="talk-test.html">Talk test</a><span aria-hidden="true">·</span><a href="train.html">Zone 2 playlists</a></p>
 </section>
 
 <!-- ══════════════════════════════════
@@ -746,7 +149,8 @@
   </div>
   <p class="section-intro">Enter your age and optional heart rate details. We compare common Zone 2 formulas and surface one clear range to use.</p>
 
-  <!-- State A: Input form -->
+  <!-- State A: Input form (+ calculation interstitial overlay) -->
+  <div class="form-card-wrap" id="form-card-wrap">
   <div class="form-card" id="form-card">
     <h2>Enter your numbers</h2>
     <div class="fields">
@@ -779,10 +183,10 @@
           <span class="field-opt">Optional</span>
         </div>
         <div class="input-row">
-          <input class="field-input" type="number" id="maxhr" min="130" max="220" placeholder="Optional" inputmode="numeric" value="">
+          <input class="field-input field-input--textnum" type="text" id="maxhr" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="Optional" value="">
           <span class="field-unit">bpm</span>
         </div>
-        <span class="field-hint">From a lab test or a true all-out effort. If unknown, we estimate with 220 minus Age.</span>
+        <span class="field-hint">From a lab test or a true all-out effort. If left blank, we estimate with 220 minus Age.</span>
       </div>
 
       <div class="field">
@@ -798,9 +202,43 @@
       </div>
     </div>
     <div class="form-actions">
-      <button type="button" class="btn-calc" onclick="calculate()">Calculate my Zone 2</button>
+      <button type="button" class="btn-calc" id="btn-calc" onclick="calculate()">Calculate my Zone 2</button>
       <p class="privacy-note">Your data never leaves your browser.</p>
     </div>
+  </div>
+
+  <div class="calc-pending" id="calc-pending" hidden aria-hidden="true" role="status" aria-live="polite" aria-busy="false">
+    <div class="calc-pending-card">
+    <div class="calc-pending-strip" aria-hidden="true"></div>
+    <div class="calc-pending-inner">
+      <p class="calc-pending-wordmark" aria-hidden="true">Zone <span class="calc-pending-z2">2</span> For You</p>
+      <div class="calc-pending-stage">
+        <div class="calc-pending-spectrum" aria-hidden="true">
+          <div class="calc-pending-bar"></div>
+          <div class="calc-pending-z2glow"></div>
+          <div class="calc-pending-beam"></div>
+          <div class="calc-pending-bracket calc-pending-bracket--l"></div>
+          <div class="calc-pending-bracket calc-pending-bracket--r"></div>
+          <span class="calc-pending-zlab">Z1</span>
+          <span class="calc-pending-zlab">Z2</span>
+          <span class="calc-pending-zlab">Z3</span>
+          <span class="calc-pending-zlab">Z4</span>
+          <span class="calc-pending-zlab">Z5</span>
+        </div>
+        <div class="calc-pending-msg">
+          <span class="calc-pending-msgline"></span>
+          <span class="calc-pending-msgline"></span>
+          <span class="calc-pending-msgline"></span>
+        </div>
+        <div class="calc-pending-dots" aria-hidden="true">
+          <span class="calc-pending-dot"></span>
+          <span class="calc-pending-dot"></span>
+          <span class="calc-pending-dot"></span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
   </div>
 
   <!-- State B: Results chart -->
@@ -868,264 +306,61 @@
         <div style="background:var(--zone-5)"></div>
       </div>
     </div>
+    <div class="post-results-measure">
+      <div class="section-header section-header--plain">
+        <h2 class="section-title">Hold that range in real time</h2>
+      </div>
+      <p class="section-intro" style="margin-top:0">Wrist optical heart rate can lag <strong>30 seconds or more</strong> during steady Zone 2 work. That is enough to drift high without feeling it. A chest strap reads every beat with ECG-level accuracy, which is what most serious Zone 2 protocols assume.</p>
+      <div class="product-grid visible" id="product-grid-after-results" aria-label="Recommended chest straps">
+        <div class="product-card">
+          <div class="product-img product-img--brand">
+            <img class="product-brand-logo" src="images/logo_garmin.png" alt="Garmin" width="200" height="80" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <span class="product-badge badge-premium">Premium</span>
+            <p class="product-name">Garmin HRM 600</p>
+            <p class="product-desc">Garmin chest strap for precise HR and HRV. Adds running dynamics with a compatible Garmin watch. Can record a workout without a watch and sync to Garmin Connect. Rechargeable battery (long run times), washable strap.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="price-main">$169</span><span class="price-cents">.99</span></span>
+              <a class="btn-buy" href="https://amzn.to/4cuVvcp" target="_blank" rel="noopener noreferrer sponsored">Buy on Amazon</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img product-img--brand">
+            <img class="product-brand-logo" src="images/logo_polar.jpg" alt="Polar" width="200" height="80" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <span class="product-badge badge-pick">Editor's pick</span>
+            <p class="product-name">Polar H10</p>
+            <p class="product-desc">Widely used chest strap with ECG-quality signal. Bluetooth and ANT+ for phones, watches, and gym equipment. Runs on a replaceable coin cell (many months of typical use).</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="price-main">$89</span><span class="price-cents">.99</span></span>
+              <a class="btn-buy" href="https://amzn.to/48frFpJ" target="_blank" rel="noopener noreferrer sponsored">Buy on Amazon</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img product-img--brand">
+            <img class="product-brand-logo" src="images/logo_wahoo.webp" alt="Wahoo Fitness" width="200" height="80" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <span class="product-badge badge-value">Dual band</span>
+            <p class="product-name">Wahoo TRACKR</p>
+            <p class="product-desc">Rechargeable chest strap with ANT+ and Bluetooth (several connections at once). LED for battery and pairing. Built for sweat and normal wet workouts. Works with major training apps and devices.</p>
+            <div class="product-footer">
+              <span class="product-price"><span class="price-main">$99</span><span class="price-cents">.99</span></span>
+              <a class="btn-buy" href="https://amzn.to/4mInCYW" target="_blank" rel="noopener noreferrer sponsored">Buy on Amazon</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="affiliate-note">Affiliate links. We earn a small commission at no cost to you. It does not change which products we recommend.</p>
+      <p class="page-crossnav">No strap yet? Pair numbers with the <a href="talk-test.html">free talk test</a> for a quick conversational check. Then hit the <a href="train.html">train hub</a> for playlists when sessions go live.</p>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     SECTION 02: MEASURE
-══════════════════════════════════ -->
-<div class="section" id="measure">
-  <div class="section-header">
-    <span class="section-num">02</span>
-    <span class="section-title">Measure</span>
-  </div>
-
-  <div class="measure-intro">
-    <h3>Now measure it right.</h3>
-    <p>Knowing your Zone 2 range is step one. Staying in it while you train is step two. And that depends entirely on how you measure heart rate.</p>
-    <p>Wrist-based optical sensors (Apple Watch, Garmin Fenix, Whoop) can lag <strong>30 seconds or more</strong> in steady-state aerobic work. That's enough to drift into Zone 3 without realizing it.</p>
-    <p>A chest strap reads every beat in real time, with ECG-level accuracy. It's what Zone 2 training was designed around.</p>
-  </div>
-
-  <p class="strap-q">Do you train with a chest strap?</p>
-  <div class="toggle-group">
-    <button type="button" class="toggle-btn" id="btn-has-strap" onclick="setHasStrap(true)">Yes, I have one</button>
-    <button type="button" class="toggle-btn active" id="btn-no-strap" onclick="setHasStrap(false)">Not yet</button>
-  </div>
-
-  <div class="tips-card" id="tips-card">
-    <h4>A few things to check.</h4>
-    <ul class="tips-list">
-      <li>Wet the electrodes before each session. Dry skin causes signal dropouts.</li>
-      <li>Wear it snug, just below the pectoral muscles. It should not bounce.</li>
-      <li>In Garmin and Apple Watch: set HR source to the external strap before starting your activity.</li>
-      <li>Give it 2 minutes to stabilize before trusting the reading.</li>
-    </ul>
-  </div>
-
-  <div class="product-grid visible" id="product-grid">
-    <!-- Order: premium anchor → editor pick (center) → value (see pricing layout) -->
-    <div class="product-card">
-      <div class="product-img product-img--brand">
-        <img class="product-brand-logo" src="images/logo_garmin.png" alt="Garmin" width="200" height="80" loading="lazy" decoding="async">
-      </div>
-      <div class="product-body">
-        <span class="product-badge badge-premium">Premium</span>
-        <p class="product-name">Garmin HRM-Pro Plus</p>
-        <p class="product-desc">Stores data on the strap itself. Great for the gym or when you leave your watch behind.</p>
-        <div class="product-footer">
-          <span class="product-price"><span class="price-main">$189</span><span class="price-cents">.99</span></span>
-          <a class="btn-buy" href="https://www.amazon.com/dp/B0DN6Y991M" target="_blank" rel="noopener noreferrer">Buy On Amazon</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card">
-      <div class="product-img product-img--brand">
-        <img class="product-brand-logo" src="images/logo_polar.jpg" alt="Polar" width="200" height="80" loading="lazy" decoding="async">
-      </div>
-      <div class="product-body">
-        <span class="product-badge badge-pick">Editor's pick</span>
-        <p class="product-name">Polar H10</p>
-        <p class="product-desc">Beat-by-beat ECG accuracy. Bluetooth and ANT+. Battery lasts a year.</p>
-        <div class="product-footer">
-          <span class="product-price"><span class="price-main">$89</span><span class="price-cents">.99</span></span>
-          <a class="btn-buy" href="https://www.amazon.com/dp/B0BHFV4M8D" target="_blank" rel="noopener noreferrer">Buy On Amazon</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card">
-      <div class="product-img product-img--brand">
-        <img class="product-brand-logo" src="images/logo_wahoo.webp" alt="Wahoo Fitness" width="200" height="80" loading="lazy" decoding="async">
-      </div>
-      <div class="product-body">
-        <span class="product-badge badge-value">Best value</span>
-        <p class="product-name">Wahoo TICKR</p>
-        <p class="product-desc">Accurate, simple, pairs with virtually any app or device. The easiest entry point.</p>
-        <div class="product-footer">
-          <span class="product-price"><span class="price-main">$49</span><span class="price-cents">.99</span></span>
-          <a class="btn-buy" href="https://www.amazon.com/dp/B00INQVYZ8" target="_blank" rel="noopener noreferrer">Buy On Amazon</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <p class="affiliate-note" id="aff-note">Affiliate links. We earn a small commission at no cost to you. It does not affect which products we recommend.</p>
-</div>
-
-<!-- ══════════════════════════════════
-     SECTION 03: TRAIN
-     Curated playlists for Zone 2 sessions.
-     Organized by activity. Built to match Zone 2 effort:
-     flat energy arc, no spikes, 60-minute sessions.
-══════════════════════════════════ -->
-<div class="section" id="train">
-  <div class="section-header">
-    <span class="section-num">03</span>
-    <span class="section-title">Train</span>
-  </div>
-  <p class="section-soon">Coming soon</p>
-
-  <p class="train-intro">
-    The right soundtrack keeps you in the zone. These playlists match our library plan: flat energy arcs, no tempo spikes, and session lengths that fit real Zone 2 work.
-  </p>
-
-  <!-- Run: 3 strategy genres + Indie & Alt for a fourth groove option -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🏃</div>
-      <span class="activity-label">Run</span>
-      <span class="activity-count">4 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Hip Hop &amp; R&amp;B</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Groove-based. Steady soul and R&amp;B energy with a flat arc that holds your pace.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">90s Rock Hits</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Anthemic mid-tempo rock. Cinematic opener, steady mid-section, reflective close.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Focus</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Almost flat arc. 80 to 95 BPM throughout. For focus over high energy.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Indie &amp; Alt</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Mid-tempo indie and alt rock. Same steady groove idea as the main run set, different vibe.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Ride: 3 strategy genres + Soul & Funk as a fourth groove -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🚴</div>
-      <span class="activity-label">Ride</span>
-      <span class="activity-count">4 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Latin</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Salsa to reggaeton arc. Consistent rhythm, good pedal groove throughout.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Afrobeats</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Steady dembow and Afrobeats groove. Strong for steady-state riding.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Electronic / Tropical House</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Melodic house. No hard techno, no aggressive drops. Steady build and ease-out.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Soul &amp; Funk</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Tight pocket and bass-forward groove. Indoor and road friendly without cadence spikes.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Walk: matches strategy library (Country, Indie, Lo-Fi 60, Lo-Fi 30) -->
-  <div class="activity-group">
-    <div class="activity-header">
-      <div class="activity-icon">🚶</div>
-      <span class="activity-label">Walk</span>
-      <span class="activity-count">4 playlists</span>
-    </div>
-    <div class="playlist-grid">
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Country</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Narrative storytelling and steady tempos. Natural fit for long walks.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Indie Acoustic</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">Quiet opener, warm mid-section, soft close. Morning or evening walks.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Chill</span>
-          <span class="pl-duration">60 min</span>
-        </div>
-        <p class="pl-desc">More ambient than the run lo-fi set. Decompression and easy conversational pace.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="pl-card">
-        <div class="pl-top">
-          <span class="pl-name">Lo-Fi Chill</span>
-          <span class="pl-duration">30 min</span>
-        </div>
-        <p class="pl-desc">Short session from the same pool as the 60 min walk. Lunch walks and quick breaks.</p>
-        <div class="pl-footer">
-          <span class="btn-soon">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <p class="pl-coming-note">Follow <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="pl-spotify-inline">Zone 2 For You on Spotify</a> for releases. Links on this page will open playlists when they go live.</p>
-</div>
 
 <!-- ══ Support ══ -->
 <div class="support-wrap">
@@ -1155,519 +390,18 @@
   <p class="footer-disc">Results are estimates based on established formulas. Not medical advice. Consult a physician or certified coach before beginning any heart rate training program.</p>
 </footer>
 
-<script>
-/* Reload / refresh: scroll to top (see head script for scrollRestoration). */
-function trackEvent(eventName, params) {
-  if (typeof window.gtag !== 'function') return;
-  window.gtag('event', eventName, params || {});
-}
+<dialog id="formula-coach-dialog" class="formula-coach-dialog" aria-labelledby="formula-coach-title">
+  <div class="formula-coach-panel">
+    <div class="formula-coach-head">
+      <h2 id="formula-coach-title" class="formula-coach-hd">Best for you</h2>
+      <button type="button" class="formula-coach-x" aria-label="Close">&times;</button>
+    </div>
+    <div id="formula-coach-body" class="formula-coach-scroll"></div>
+  </div>
+</dialog>
 
-function scrollDocumentToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-}
-
-function stripUrlHashKeepPath() {
-  if (!location.hash) return;
-  try {
-    history.replaceState(null, '', location.href.split('#')[0]);
-  } catch (e) {}
-}
-
-/**
- * Scroll so the "01 Calculate" row sits just below the sticky header (not the top of #calculate,
- * which sits above large padding and would hide the title under the fold).
- */
-function scrollToCalculateSectionHead() {
-  const siteHeader = document.querySelector('.site-header');
-  const headBadge = document.querySelector('#calculate .section-num');
-  if (!siteHeader || !headBadge) return;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const gapPx = 20;
-  const headerH = siteHeader.getBoundingClientRect().height;
-  const rect = headBadge.getBoundingClientRect();
-  const y = window.pageYOffset + rect.top - headerH - gapPx;
-  window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' });
-}
-
-/* ════════════════════════════════════════════
-   Fitness level state
-   'beginner' | 'intermediate' | 'advanced'
-   Drives Maffetone adjustment and formula priority.
-════════════════════════════════════════════ */
-let fitnessLevel = 'intermediate';
-
-function setFitness(level) {
-  fitnessLevel = level;
-  ['beginner', 'intermediate', 'advanced'].forEach(l => {
-    const btn = document.getElementById('fit-' + l);
-    if (btn) btn.classList.toggle('active', l === level);
-  });
-  trackEvent('fitness_level_selected', { fitness_level: level });
-}
-
-/* ════════════════════════════════════════════
-   Formula engine
-   Formulas: Karvonen, Maffetone, % Max HR, 220-Age.
-   Karvonen requires resting HR. Others use age (+ optional actual max HR).
-   Fitness level adjusts Maffetone and shifts formula priority.
-   Consensus: strict intersection first; if none, try dropping one outlier (N-1).
-════════════════════════════════════════════ */
-
-function computeFormulas(age, rhr, maxHR) {
-  const estMax = maxHR || (220 - age);
-  const rows = [];
-
-  // Maffetone adjustment: Maffetone himself prescribed ±5 based on training history.
-  // Beginner/rebuilding: −5 (conservative, build aerobic base safely)
-  // Consistent 2+ years making progress: +5 (credit for aerobic adaptation)
-  const mafAdj   = fitnessLevel === 'beginner' ? -5 : fitnessLevel === 'advanced' ? 5 : 0;
-  const mafBase  = 180 - age + mafAdj;
-  const mafHint  = mafAdj ===  5 ? 'Adjusted +5. 2+ years consistent training.'
-                 : mafAdj === -5 ? 'Adjusted \u22125. Building aerobic base safely.'
-                 :                 'Standard aerobic base-building reference.';
-
-  // Karvonen (requires RHR). Most personalized; especially accurate for fit athletes
-  // with a low RHR and tested max HR.
-  if (rhr) {
-    const hrr = estMax - rhr;
-    // Advanced athletes with RHR → Karvonen is most accurate; beginners → Maffetone leads
-    const karPriority = fitnessLevel === 'beginner' ? 2 : 1;
-    rows.push({ id:'karvonen', name:'Karvonen',
-      hint: maxHR ? 'Uses your tested max HR + resting HR. Highest accuracy.'
-                  : 'Uses heart rate reserve. More personalized than age-only formulas.',
-      low: Math.round(hrr * 0.60 + rhr), high: Math.round(hrr * 0.70 + rhr),
-      priority: karPriority, locked: false });
-  } else {
-    rows.push({ id:'karvonen', name:'Karvonen',
-      hint:'Enter resting HR above to unlock. Most personalized formula.',
-      low: null, high: null, priority: 4, locked: true });
-  }
-
-  // Maffetone. Leads when no RHR, or when beginner (conservative range is intentional)
-  const mafPriority = fitnessLevel === 'beginner' ? 1
-                    : rhr ? 2
-                    : 1;
-  rows.push({ id:'maffetone', name:'Maffetone', hint: mafHint,
-    low: mafBase - 10, high: mafBase,
-    priority: mafPriority, locked: false });
-
-  // % of Max HR. Preferred when tested max HR is known and no RHR
-  const pctPriority = rhr ? 3
-                    : maxHR ? (fitnessLevel === 'advanced' ? 1 : 2)
-                    : 2;
-  rows.push({ id:'pctmax', name:'% of Max HR',
-    hint: maxHR ? 'Based on your tested max HR. Reliable when max is confirmed.'
-                : 'Based on estimated max HR (220 \u2212 Age). Add your actual max above for accuracy.',
-    low: Math.round(estMax * 0.65), high: Math.round(estMax * 0.75),
-    priority: pctPriority, locked: false });
-
-  // 220 − Age. Least personalized; deprioritized for advanced athletes over ~45
-  // because estimated max HR commonly underestimates for trained older athletes.
-  const ageNote = (age > 45 && fitnessLevel === 'advanced')
-    ? '220 \u2212 Age tends to underestimate max HR for fit athletes over 45'
-    : 'Widely used starting point; less accurate for fit or older athletes';
-  rows.push({ id:'age220', name:'220 \u2212 Age', hint: ageNote,
-    low: Math.round((220 - age) * 0.60), high: Math.round((220 - age) * 0.70),
-    priority: rhr ? 5 : 3, locked: false });
-
-  rows.sort((a, b) => a.priority - b.priority);
-  const first = rows.find(r => !r.locked);
-  if (first) first.featured = true;
-  return rows;
-}
-
-/**
- * Plain-language copy for the "Best for you" coachmark (matches priority rules in computeFormulas).
- */
-function getBestForYouExplanation(featuredId, rhr, maxHR) {
-  const hasRhr = rhr != null && !isNaN(rhr);
-  const hasMax = maxHR != null && !isNaN(maxHR);
-
-  if (featuredId === 'karvonen') {
-    return 'You entered a resting heart rate, so we highlight Karvonen first. It uses the range between your resting and max heart rate, which is usually the best match when those numbers are ones you trust.';
-  }
-  if (featuredId === 'maffetone') {
-    if (fitnessLevel === 'beginner') {
-      return 'For starting out or rebuilding, we highlight Maffetone first. It keeps a conservative aerobic range while you build your base.';
-    }
-    return 'You did not enter a resting heart rate, so we highlight Maffetone first. Add your resting HR anytime to unlock Karvonen for a more tailored lead pick.';
-  }
-  if (featuredId === 'pctmax') {
-    if (fitnessLevel === 'advanced' && hasMax && !hasRhr) {
-      return 'You entered a tested max heart rate and your training history is advanced, so we highlight percent of max HR first. It scales from that max when resting HR is not in play.';
-    }
-    return 'We highlight percent of max HR here. It builds your range from your max heart rate, or from an age-based estimate when you have not added a max yet.';
-  }
-  if (featuredId === 'age220') {
-    return 'We highlight the 220 minus age style range here. It is a simple starting point when other inputs are missing or when this line fits the priority rules for your profile.';
-  }
-  return 'We highlight one formula first based on your training experience and which fields you filled in. Every row below still shows the other methods so you can compare.';
-}
-
-function computeConsensus(formulas) {
-  const unlocked = formulas.filter(f => !f.locked);
-
-  // Try strict intersection of all
-  const sLo = Math.max(...unlocked.map(f => f.low));
-  const sHi = Math.min(...unlocked.map(f => f.high));
-  if (sLo <= sHi) {
-    return { low: sLo, high: sHi, note: 'Where every formula\'s range overlaps.' };
-  }
-
-  // No strict overlap. Try dropping one formula at a time
-  let best = null;
-  const n = unlocked.length;
-  for (let i = 0; i < n; i++) {
-    const sub = unlocked.filter((_, j) => j !== i);
-    const lo = Math.max(...sub.map(f => f.low));
-    const hi = Math.min(...sub.map(f => f.high));
-    if (lo <= hi && (!best || (hi - lo) > (best.high - best.low))) {
-      best = {
-        low: lo,
-        high: hi,
-        note: 'Where most formulas agree. One range sits outside this band.'
-      };
-    }
-  }
-  if (best) return best;
-
-  // Complete divergence. Use midpoint of medians as a reasonable estimate
-  const mids = unlocked.map(f => Math.round((f.low + f.high) / 2)).sort((a,b)=>a-b);
-  const center = mids[Math.floor(mids.length / 2)];
-  return {
-    low: center - 3,
-    high: center + 3,
-    note: 'No single overlap across every formula. This is a practical midpoint from the ranges above.'
-  };
-}
-
-function computeScale(formulas) {
-  const unlocked = formulas.filter(f => !f.locked);
-  const rawMin = Math.min(...unlocked.map(f => f.low));
-  const rawMax = Math.max(...unlocked.map(f => f.high));
-  return {
-    min: Math.floor((rawMin - 8) / 10) * 10,
-    max: Math.ceil((rawMax  + 8) / 10) * 10
-  };
-}
-
-/** Percent along chart track (same scale as axis ticks and formula bars). */
-function pctOnScale(bpm, s) {
-  return ((bpm - s.min) / (s.max - s.min)) * 100;
-}
-function widthPct(lo, hi, s) {
-  return ((hi - lo) / (s.max - s.min)) * 100;
-}
-
-async function shareZone2() {
-  const loEl = document.getElementById('ss-n-lo');
-  const hiEl = document.getElementById('ss-n-hi');
-  const btn = document.getElementById('btn-share');
-  const label = btn && btn.querySelector('.btn-share-label');
-  if (!loEl || !hiEl || !btn || !label) return;
-  const lo = loEl.textContent.trim();
-  const hi = hiEl.textContent.trim();
-  const text = 'My Zone 2 range (Zone 2 For You): ' + lo + '-' + hi + ' bpm';
-  const url = window.location.href.split('#')[0];
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: 'Zone 2 For You', text: text, url: url });
-      trackEvent('share_zone2', {
-        share_method: 'native_share',
-        zone2_low: lo,
-        zone2_high: hi
-      });
-      return;
-    }
-  } catch (e) {
-    if (e && e.name === 'AbortError') {
-      trackEvent('share_zone2_cancelled', { share_method: 'native_share' });
-      return;
-    }
-  }
-  const full = text + (url ? '\n' + url : '');
-  try {
-    await navigator.clipboard.writeText(full);
-    const prev = label.textContent;
-    label.textContent = 'Copied to clipboard';
-    btn.disabled = true;
-    setTimeout(() => {
-      label.textContent = prev;
-      btn.disabled = false;
-    }, 2200);
-    trackEvent('share_zone2', {
-      share_method: 'clipboard',
-      zone2_low: lo,
-      zone2_high: hi
-    });
-    return;
-  } catch (e) {
-    /* clipboard may be unavailable */
-  }
-  trackEvent('share_zone2', {
-    share_method: 'manual_copy_prompt',
-    zone2_low: lo,
-    zone2_high: hi
-  });
-  window.prompt('Copy this text:', full);
-}
-
-/* ════════════════════════════════════════════
-   Render the chart
-════════════════════════════════════════════ */
-function renderChart(formulas, consensus, scale, bestForYouNote) {
-  const coachText = bestForYouNote || '';
-  const ticks = [];
-  for (let b = scale.min; b <= scale.max; b += 10) ticks.push(b);
-
-  document.getElementById('axis-inner').innerHTML = ticks.map(b =>
-    `<span class="axis-tick" style="left:${pctOnScale(b, scale)}%">${b}</span>`
-  ).join('');
-
-  const gls = ticks.map(b =>
-    `<div class="gl" style="left:${pctOnScale(b, scale)}%"></div>`
-  ).join('');
-  const colL = pctOnScale(consensus.low, scale);
-  const colW = widthPct(consensus.low, consensus.high, scale);
-  const col = `<div class="consensus-col" style="left:${colL}%;width:${colW}%"></div>`;
-
-  document.getElementById('formula-rows').innerHTML = formulas.map(f => {
-    if (f.locked) {
-      return `
-      <div class="row locked">
-        <div class="meta"><span class="fn">${f.name}</span><span class="fhint">${f.hint}</span></div>
-        <div class="ba">${col}${gls}</div>
-      </div>`;
-    }
-    const bL = pctOnScale(f.low, scale);
-    const bW = widthPct(f.low, f.high, scale);
-    return `
-      <div class="row ${f.featured ? 'featured' : ''}">
-        <div class="meta">
-          ${f.featured ? `<div class="best-wrap"><details class="best-coach"><summary class="best-coach-summary" title="Why this formula?"><span class="tag tag-best">Best for you</span><span class="best-coach-q" aria-hidden="true">?</span></summary><p class="best-coach-body">${coachText}</p></details></div>` : ''}
-          <span class="fn">${f.name}</span>
-          <span class="fhint">${f.hint}</span>
-        </div>
-        <div class="ba">
-          ${col}${gls}
-          <div class="bt">
-            <div class="b-slot" style="left:${bL}%;width:${bW}%">
-              <div class="b-visual"></div>
-              <span class="b-edge b-edge--lo">${f.low}</span>
-              <span class="b-edge b-edge--hi">${f.high}</span>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-
-  const ssL = pctOnScale(consensus.low, scale);
-  const ssW = widthPct(consensus.low, consensus.high, scale);
-  const bar = document.getElementById('ss-bar');
-  bar.style.left = ssL + '%';
-  bar.style.width = ssW + '%';
-
-  const bpmL = document.getElementById('ss-bpm-l');
-  bpmL.textContent = consensus.low;
-  bpmL.style.top = '50%';
-  bpmL.style.left = ssL + '%';
-
-  const bpmR = document.getElementById('ss-bpm-r');
-  bpmR.textContent = consensus.high;
-  bpmR.style.top = '50%';
-  bpmR.style.left = (ssL + ssW) + '%';
-
-  document.getElementById('ss-n-lo').textContent = consensus.low;
-  document.getElementById('ss-n-hi').textContent = consensus.high;
-  document.getElementById('ss-hint').textContent = consensus.note;
-}
-
-/* ════════════════════════════════════════════
-   Calculate. Hides form, shows results
-════════════════════════════════════════════ */
-function calculate() {
-  const ageVal   = document.getElementById('age').value.trim();
-  const rhrVal   = document.getElementById('rhr').value.trim();
-  const maxHRVal = document.getElementById('maxhr').value.trim();
-
-  const age   = parseInt(ageVal);
-  const rhr   = rhrVal   ? parseInt(rhrVal)   : null;
-  const maxHR = maxHRVal ? parseInt(maxHRVal) : null;
-
-  if (!age || age < 15 || age > 80) {
-    trackEvent('calculate_zone2_validation_error', { field: 'age' });
-    document.getElementById('age').focus();
-    return;
-  }
-
-  const formulas  = computeFormulas(age, rhr, maxHR);
-  const consensus = computeConsensus(formulas);
-  const scale     = computeScale(formulas);
-
-  const featured = formulas.find(x => x.featured);
-  const bestNote = featured ? getBestForYouExplanation(featured.id, rhr, maxHR) : '';
-  renderChart(formulas, consensus, scale, bestNote);
-  trackEvent('calculate_zone2', {
-    fitness_level: fitnessLevel,
-    has_resting_hr: rhr !== null,
-    has_max_hr: maxHR !== null,
-    featured_formula: featured ? featured.id : 'none',
-    consensus_low: consensus.low,
-    consensus_high: consensus.high
-  });
-
-  // Chips
-  document.getElementById('chips').innerHTML = [
-    `<span class="chip">Age ${age}</span>`,
-    rhr   ? `<span class="chip">RHR ${rhr} bpm</span>`     : `<span class="chip">RHR estimated</span>`,
-    maxHR ? `<span class="chip">Max HR ${maxHR} bpm</span>` : `<span class="chip">Max HR estimated</span>`
-  ].join('');
-
-  // Swap form → results
-  document.getElementById('form-card').classList.add('hidden');
-  const results = document.getElementById('results');
-  results.classList.add('visible');
-  setTimeout(() => {
-    scrollToCalculateSectionHead();
-  }, 80);
-
-}
-
-function backToForm() {
-  document.getElementById('results').classList.remove('visible');
-  document.getElementById('form-card').classList.remove('hidden');
-  requestAnimationFrame(() => scrollToCalculateSectionHead());
-  trackEvent('back_to_inputs');
-}
-
-/* ════════════════════════════════════════════
-   Step indicator. Scroll-driven via IntersectionObserver
-   Steps fill cyan with ✓ as the user scrolls into each section.
-════════════════════════════════════════════ */
-const sectionOrder = ['calculate', 'measure', 'train'];
-
-const stepObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const idx = sectionOrder.indexOf(entry.target.id);
-    if (idx === -1) return;
-
-    const s1 = document.getElementById('step-1');
-    const s2 = document.getElementById('step-2');
-    const s3 = document.getElementById('step-3');
-    const c12 = document.getElementById('conn-1-2');
-    const c23 = document.getElementById('conn-2-3');
-
-    if (idx === 0) {
-      s1.className = 'step step--current';
-      s1.querySelector('.step-icon').textContent = '01';
-      s2.className = 'step';
-      s2.querySelector('.step-icon').textContent = '02';
-      s3.className = 'step';
-      s3.querySelector('.step-icon').textContent = '03';
-      c12.classList.remove('step-conn--done');
-      c23.classList.remove('step-conn--done');
-      return;
-    }
-    if (idx === 1) {
-      s1.className = 'step step--done';
-      s1.querySelector('.step-icon').textContent = '\u2713';
-      s2.className = 'step step--current';
-      s2.querySelector('.step-icon').textContent = '02';
-      s3.className = 'step';
-      s3.querySelector('.step-icon').textContent = '03';
-      c12.classList.add('step-conn--done');
-      c23.classList.remove('step-conn--done');
-      return;
-    }
-    /* Train: all three steps complete (03 becomes a checkmark). */
-    s1.className = 'step step--done';
-    s1.querySelector('.step-icon').textContent = '\u2713';
-    s2.className = 'step step--done';
-    s2.querySelector('.step-icon').textContent = '\u2713';
-    s3.className = 'step step--done';
-    s3.querySelector('.step-icon').textContent = '\u2713';
-    c12.classList.add('step-conn--done');
-    c23.classList.add('step-conn--done');
-  });
-}, {
-  /* Fires when the top of a section crosses into the upper 40% of the viewport */
-  rootMargin: '0px 0px -60% 0px',
-  threshold: 0
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-  stripUrlHashKeepPath();
-  scrollDocumentToTop();
-  requestAnimationFrame(() => {
-    stripUrlHashKeepPath();
-    scrollDocumentToTop();
-  });
-
-  const heroCalc = document.querySelector('a.hero-cta[href="#calculate"]');
-  if (heroCalc) {
-    heroCalc.addEventListener('click', (e) => {
-      e.preventDefault();
-      scrollToCalculateSectionHead();
-      trackEvent('hero_cta_click', { destination: 'calculate' });
-    });
-  }
-
-  document.querySelectorAll('.steps-inner .step').forEach(step => {
-    step.addEventListener('click', () => {
-      const labelEl = step.querySelector('.step-label');
-      const destination = step.getAttribute('href') || '';
-      trackEvent('step_navigation_click', {
-        step_label: labelEl ? labelEl.textContent.trim().toLowerCase() : 'unknown',
-        destination: destination.replace('#', '')
-      });
-    });
-  });
-
-  document.querySelectorAll('a[href]').forEach(link => {
-    link.addEventListener('click', () => {
-      const href = link.getAttribute('href') || '';
-      const isExternal = /^https?:\/\//i.test(href);
-      if (!isExternal) return;
-      trackEvent('outbound_link_click', {
-        link_url: href,
-        link_text: (link.textContent || '').trim().slice(0, 80)
-      });
-    });
-  });
-
-  sectionOrder.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) stepObserver.observe(el);
-  });
-});
-
-window.addEventListener('load', () => {
-  stripUrlHashKeepPath();
-  scrollDocumentToTop();
-});
-
-/* ════════════════════════════════════════════
-   Measure toggle
-════════════════════════════════════════════ */
-function setHasStrap(hasOne) {
-  document.getElementById('btn-has-strap').classList.toggle('active',  hasOne);
-  document.getElementById('btn-no-strap').classList.toggle('active', !hasOne);
-  document.getElementById('tips-card').classList.toggle('visible',  hasOne);
-  document.getElementById('product-grid').classList.toggle('visible', !hasOne);
-  document.getElementById('aff-note').style.display = hasOne ? 'none' : '';
-  trackEvent('strap_toggle', { has_chest_strap: hasOne });
-
-}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').catch(() => {
-      // Registration failures are non-blocking for the core page experience.
-    });
-  });
-}
-
-</script>
+<script src="site-shared.js" defer></script>
+<script src="calc-pending.js" defer></script>
+<script src="calc.js" defer></script>
 </body>
 </html>
